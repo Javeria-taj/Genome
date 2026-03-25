@@ -1,0 +1,234 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@0;1&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0f0e0d;--paper:#f5f0e8;--paper2:#ede8dc;--paper3:#e4ddd0;
+  --red:#e63a2e;--blue:#1a6ef5;--dim:#7a756e;--dim2:#a09890;
+  --mono:'Space Mono',monospace;--serif:'Instrument Serif',serif;
+  --b2:1.5px solid var(--ink);--b1:1px solid var(--ink);--bh:0.5px solid rgba(15,14,13,0.18);
+}
+@media(prefers-color-scheme:dark){
+  :root{--ink:#ede8dc;--paper:#131210;--paper2:#1c1a17;--paper3:#232018;--dim:#8a8278;--dim2:#5a5450;--red:#ff5a4f;--blue:#4d8eff}
+}
+.login-shell{font-family:var(--mono);background:var(--paper);color:var(--ink);display:grid;grid-template-columns:1fr 1fr;min-height:700px;border:var(--b2)}
+
+/* LEFT — ART PANEL */
+.left{background:var(--ink);color:var(--paper);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:28px}
+.left-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(245,240,232,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(245,240,232,.06) 1px,transparent 1px);background-size:24px 24px}
+.left-topo{position:absolute;inset:0}
+.geo-ring{position:absolute;border-radius:50%;border:1px solid rgba(245,240,232,.12)}
+.geo-ring:nth-child(1){width:320px;height:320px;top:50%;left:50%;transform:translate(-50%,-50%)}
+.geo-ring:nth-child(2){width:220px;height:220px;top:50%;left:50%;transform:translate(-50%,-50%)}
+.geo-ring:nth-child(3){width:120px;height:120px;top:50%;left:50%;transform:translate(-50%,-50%)}
+.geo-cross-h{position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(245,240,232,.08)}
+.geo-cross-v{position:absolute;top:0;bottom:0;left:50%;width:1px;background:rgba(245,240,232,.08)}
+.center-dot{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:var(--red);border-radius:50%}
+.center-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:20px;height:20px;border:1.5px solid var(--red);border-radius:50%;animation:cpulse 2.4s ease-out infinite}
+@keyframes cpulse{0%{opacity:.7;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(3)}}
+.left-top{position:relative;z-index:2}
+.left-logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;letter-spacing:.1em}
+.logo-pip{width:8px;height:8px;background:var(--red);border-radius:50%}
+.left-bottom{position:relative;z-index:2}
+.left-headline{font-family:var(--serif);font-style:italic;font-size:32px;line-height:1.15;letter-spacing:-.01em;margin-bottom:16px;color:rgba(245,240,232,.95)}
+.left-stats{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid rgba(245,240,232,.18);margin-top:18px}
+.ls-cell{padding:10px 12px;border-right:1px solid rgba(245,240,232,.12);border-bottom:1px solid rgba(245,240,232,.12)}
+.ls-cell:nth-child(even){border-right:none}
+.ls-cell:nth-child(3),.ls-cell:nth-child(4){border-bottom:none}
+.ls-val{font-size:18px;font-weight:700;display:block;color:rgba(245,240,232,.9)}
+.ls-lbl{font-size:8px;color:rgba(245,240,232,.45);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
+.left-coords{font-size:8.5px;color:rgba(245,240,232,.35);margin-top:12px;letter-spacing:.06em}
+
+/* COORDINATE LINES — decorative SVG paths */
+.left-paths{position:absolute;inset:0;pointer-events:none}
+
+/* RIGHT — FORM PANEL */
+.right{display:flex;flex-direction:column;padding:28px 32px;position:relative;border-left:var(--b2)}
+.right-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px}
+.right-top-label{font-size:8.5px;text-transform:uppercase;letter-spacing:.12em;color:var(--dim)}
+.right-top-register{font-size:8.5px;color:var(--blue);text-decoration:underline;cursor:pointer;font-family:var(--mono)}
+
+/* TERMINAL */
+.terminal{border:var(--b1);background:var(--paper2);padding:12px 14px;margin-bottom:24px;min-height:52px}
+.term-line{font-size:9.5px;color:var(--dim);line-height:1.8}
+.term-line b{color:var(--ink)}
+.term-cursor{display:inline-block;width:7px;height:11px;background:var(--red);vertical-align:middle;animation:blink .8s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* FORM */
+.form-section-label{font-size:8px;text-transform:uppercase;letter-spacing:.14em;color:var(--dim);margin-bottom:6px;border-bottom:var(--bh);padding-bottom:4px}
+.field{margin-bottom:14px}
+.field-label{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:5px;display:block}
+.field-input{width:100%;border:var(--b1);background:var(--paper);color:var(--ink);font-family:var(--mono);font-size:10px;padding:8px 10px;outline:none;transition:border-color .15s}
+.field-input:focus{border-color:var(--red);border-width:1.5px}
+.field-input::placeholder{color:var(--dim2)}
+.btn-signin{width:100%;margin-top:4px;border:var(--b2);background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.12em;padding:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:opacity .12s}
+.btn-signin:hover{opacity:.85}
+.btn-arrow{width:14px;height:14px;border:1.5px solid var(--paper);display:flex;align-items:center;justify-content:center;font-size:9px}
+.divider{display:flex;align-items:center;gap:10px;margin:16px 0;font-size:8.5px;color:var(--dim2)}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--ink);opacity:.15}
+.field-hint{font-size:8px;color:var(--dim);margin-top:4px}
+.error-box{border:1px solid var(--red);padding:6px 10px;font-size:8.5px;color:var(--red);margin-bottom:12px;display:none}
+.form-footer{margin-top:auto;padding-top:20px;border-top:var(--bh);font-size:8px;color:var(--dim);display:flex;justify-content:space-between}
+</style>
+
+<div class="login-shell">
+
+  <!-- LEFT ART PANEL -->
+  <div class="left">
+    <div class="left-grid"></div>
+
+    <!-- Concentric geo rings -->
+    <div class="left-topo">
+      <div class="geo-ring"></div>
+      <div class="geo-ring"></div>
+      <div class="geo-ring"></div>
+      <div class="geo-cross-h"></div>
+      <div class="geo-cross-v"></div>
+
+      <!-- SVG paths — lat/lng lines + scatter pins -->
+      <svg class="left-paths" viewBox="0 0 400 700" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%">
+        <!-- Latitude arcs -->
+        <path d="M0 210 Q200 190 400 210" fill="none" stroke="rgba(245,240,232,.07)" stroke-width="1"/>
+        <path d="M0 280 Q200 260 400 280" fill="none" stroke="rgba(245,240,232,.07)" stroke-width="1"/>
+        <path d="M0 350 Q200 330 400 350" fill="none" stroke="rgba(245,240,232,.07)" stroke-width="1"/>
+        <path d="M0 420 Q200 400 400 420" fill="none" stroke="rgba(245,240,232,.07)" stroke-width="1"/>
+        <!-- Longitude arcs -->
+        <path d="M120 0 Q110 350 120 700" fill="none" stroke="rgba(245,240,232,.06)" stroke-width="1"/>
+        <path d="M200 0 Q190 350 200 700" fill="none" stroke="rgba(245,240,232,.06)" stroke-width="1"/>
+        <path d="M280 0 Q270 350 280 700" fill="none" stroke="rgba(245,240,232,.06)" stroke-width="1"/>
+        <!-- Scatter data pins -->
+        <circle cx="140" cy="240" r="2.5" fill="rgba(230,58,46,.5)"/>
+        <circle cx="260" cy="180" r="2.5" fill="rgba(26,110,245,.5)"/>
+        <circle cx="80" cy="380" r="2.5" fill="rgba(245,240,232,.3)"/>
+        <circle cx="320" cy="420" r="2.5" fill="rgba(245,240,232,.3)"/>
+        <circle cx="350" cy="280" r="2" fill="rgba(245,240,232,.2)"/>
+        <circle cx="60" cy="300" r="2" fill="rgba(245,240,232,.2)"/>
+        <!-- Connector lines between pins -->
+        <line x1="140" y1="240" x2="260" y2="180" stroke="rgba(230,58,46,.25)" stroke-width=".8" stroke-dasharray="3 3"/>
+        <line x1="260" y1="180" x2="320" y2="420" stroke="rgba(26,110,245,.2)" stroke-width=".8" stroke-dasharray="4 4"/>
+      </svg>
+
+      <div class="center-ring"></div>
+      <div class="center-dot"></div>
+    </div>
+
+    <div class="left-top">
+      <div class="left-logo">
+        <div class="logo-pip"></div>
+        GeoSense
+      </div>
+    </div>
+
+    <div class="left-bottom">
+      <div class="left-headline">40 years of<br>climate data,<br>mapped.</div>
+      <div style="font-size:8.5px;color:rgba(245,240,232,.4);line-height:1.7">
+        Historical weather analysis powered<br>by Open-Meteo API · 1985 – 2024
+      </div>
+      <div class="left-stats">
+        <div class="ls-cell">
+          <span class="ls-val">14,600</span>
+          <div class="ls-lbl">Data points</div>
+        </div>
+        <div class="ls-cell">
+          <span class="ls-val">40yr</span>
+          <div class="ls-lbl">Coverage</div>
+        </div>
+        <div class="ls-cell">
+          <span class="ls-val">+2.1°</span>
+          <div class="ls-lbl">Avg rise</div>
+        </div>
+        <div class="ls-cell">
+          <span class="ls-val">∞</span>
+          <div class="ls-lbl">Locations</div>
+        </div>
+      </div>
+      <div class="left-coords">
+        13.0827° N &nbsp;·&nbsp; 80.2707° E &nbsp;·&nbsp; Chennai, IN
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT FORM PANEL -->
+  <div class="right">
+    <div class="right-top">
+      <span class="right-top-label">Sign in to GeoSense</span>
+      <span class="right-top-register">Create account →</span>
+    </div>
+
+    <!-- TERMINAL SEQUENCE -->
+    <div class="terminal" id="term">
+      <div class="term-line" id="tl1" style="opacity:0">
+        <b>$</b> geosense --init
+      </div>
+      <div class="term-line" id="tl2" style="opacity:0">
+        Connecting to Open-Meteo archive... <b style="color:#2ecc71">OK</b>
+      </div>
+      <div class="term-line" id="tl3" style="opacity:0">
+        Loading 40yr dataset... <b>Ready.</b> <span class="term-cursor"></span>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-section-label">Credentials</div>
+
+    <div class="field">
+      <label class="field-label">Email address</label>
+      <input class="field-input" type="email" placeholder="user@geosense.io" id="emailInp"/>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Password</label>
+      <input class="field-input" type="password" placeholder="••••••••••••" id="passInp"/>
+      <div class="field-hint">Min. 8 characters · case-sensitive</div>
+    </div>
+
+    <div class="error-box" id="errBox">Invalid credentials — please try again.</div>
+
+    <button class="btn-signin" onclick="handleLogin()">
+      <span class="btn-arrow">→</span>
+      Authenticate &amp; Enter Dashboard
+    </button>
+
+    <div class="divider">or</div>
+
+    <div class="field" style="margin-bottom:0">
+      <label class="field-label">Access token</label>
+      <input class="field-input" type="text" placeholder="gso_xxxxxxxxxxxxxxxx"/>
+      <div class="field-hint">For API / programmatic access</div>
+    </div>
+
+    <div class="form-footer">
+      <span>GeoSense v2.0 · Next.js + MongoDB</span>
+      <span style="color:var(--blue);cursor:pointer;text-decoration:underline">Forgot password?</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function seq(id, delay) {
+  setTimeout(function() {
+    var el = document.getElementById(id);
+    if (el) el.style.opacity = '1';
+  }, delay);
+}
+seq('tl1', 300);
+seq('tl2', 900);
+seq('tl3', 1600);
+
+function handleLogin() {
+  var email = document.getElementById('emailInp').value;
+  var pass = document.getElementById('passInp').value;
+  var err = document.getElementById('errBox');
+  if (!email || !pass) {
+    err.style.display = 'block';
+    err.textContent = 'Please enter both email and password.';
+    return;
+  }
+  err.style.display = 'none';
+  var btn = document.querySelector('.btn-signin');
+  btn.textContent = 'Authenticating...';
+  setTimeout(function() { btn.innerHTML = '<span class="btn-arrow" style="color:var(--paper)">✓</span> Access Granted — Redirecting'; }, 1400);
+}
+</script>
