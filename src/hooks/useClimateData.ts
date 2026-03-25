@@ -1,18 +1,18 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import { YearlyClimateData } from "@/types/climate";
 import toast from "react-hot-toast";
 
-export function useClimateData() {
+export function useClimateData(lat: number | null, lng: number | null) {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<YearlyClimateData[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchClimateData = useCallback(async (lat: number, lng: number) => {
+  const fetchClimateData = useCallback(async (latitude: number, longitude: number) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await axios.get(`/api/climate?lat=${lat}&lng=${lng}`);
+      const res = await axios.get(`/api/climate?lat=${latitude}&lng=${longitude}`);
       setData(res.data);
       toast.success("Telemetry sync complete");
       return res.data;
@@ -26,5 +26,17 @@ export function useClimateData() {
     }
   }, []);
 
-  return { data, loading, error, fetchClimateData };
+  useEffect(() => {
+    if (lat !== null && lng !== null) {
+      fetchClimateData(lat, lng);
+    } else {
+      setData(null);
+    }
+  }, [lat, lng, fetchClimateData]);
+
+  const refetch = useCallback(() => {
+    if (lat !== null && lng !== null) fetchClimateData(lat, lng);
+  }, [lat, lng, fetchClimateData]);
+
+  return { data, loading, error, refetch, fetchClimateData };
 }

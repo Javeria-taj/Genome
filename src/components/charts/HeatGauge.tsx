@@ -18,7 +18,7 @@ const DECADE_HEIGHTS = [30, 50, 68, 88];
 
 export default function HeatGauge({ delta, previousDelta = 0 }: HeatGaugeProps) {
   const [displayDelta, setDisplayDelta] = useState(previousDelta);
-  const rafRef = useRef<number>();
+  const rafRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     const start = previousDelta;
