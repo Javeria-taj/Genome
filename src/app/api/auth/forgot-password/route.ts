@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/User";
-import { sendPasswordResetEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
@@ -29,11 +28,12 @@ export async function POST(req: NextRequest) {
 
     const resetUrl = `${process.env.NEXTAUTH_URL}/reset-password/${token}`;
 
-    await sendPasswordResetEmail({
-      to: email,
-      name: user.name,
-      resetUrl,
-    });
+    // Log the reset link to the console for development/demo purposes
+    console.log("-----------------------------------------");
+    console.log("PASSWORD RESET REQUESTED");
+    console.log(`Email: ${email}`);
+    console.log(`Reset Link: ${resetUrl}`);
+    console.log("-----------------------------------------");
 
     return NextResponse.json({ ok: true });
   } catch (error) {
