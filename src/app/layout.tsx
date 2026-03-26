@@ -18,8 +18,9 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "GeoSense — Climate Telemetry Dashboard",
+  title: "Genome — GeoScience Dashboard",
   description: "40-year climate data analysis powered by Open-Meteo API",
+  icons: { icon: '/favicon.svg' },
 };
 
 export default function RootLayout({
@@ -35,13 +36,14 @@ export default function RootLayout({
           position="bottom-right"
           toastOptions={{
             style: {
-              background: 'var(--paper2)',
-              color: 'var(--ink)',
+              fontFamily: 'Space Mono',
+              fontSize: '11px',
               border: '1px solid var(--ink)',
-              borderRadius: '0',
-              fontFamily: 'var(--mono)',
-              fontSize: '10px',
+              background: 'var(--paper)',
+              color: 'var(--ink)',
             },
+            success: { iconTheme: { primary: '#2ecc71', secondary: 'var(--paper)' } },
+            error: { iconTheme: { primary: 'var(--accent)', secondary: 'var(--paper)' } },
           }}
         />
       </body>

@@ -10,9 +10,12 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "@types/d3": "^7.4.3",
+    "@types/topojson-client": "^3.1.5",
     "axios": "^1.13.6",
     "bcryptjs": "^3.0.3",
     "chart.js": "^4.5.1",
+    "d3": "^7.9.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.6.0",
     "mongodb": "^7.1.1",
@@ -26,6 +29,7 @@
     "react-hook-form": "^7.72.0",
     "react-hot-toast": "^2.6.0",
     "react-leaflet": "^5.0.0",
+    "topojson-client": "^3.1.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {

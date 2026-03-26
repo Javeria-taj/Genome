@@ -3,11 +3,28 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { YearlyClimateData } from "@/types/climate";
 
+export interface LocationInfo {
+  lat: number;
+  lng: number;
+  city: string;
+  country: string;
+  countryCode: string;
+  displayName: string;  // e.g. "Mumbai, IN"
+  timezone: string;
+  aqi: number | null;
+  aqiLabel: string;
+  aqiColor: string;
+}
+
 interface CoordinateContextType {
   selectedCoords: { lat: number; lng: number } | null;
   setSelectedCoords: (coords: { lat: number; lng: number } | null) => void;
   locationLabel: string;
   setLocationLabel: (label: string) => void;
+  selectedLocation: LocationInfo | null;
+  setSelectedLocation: (loc: LocationInfo | null) => void;
+  locationLoading: boolean;
+  setLocationLoading: (v: boolean) => void;
   climateDataA: YearlyClimateData[] | null;
   setClimateDataA: (data: YearlyClimateData[] | null) => void;
   climateDataB: YearlyClimateData[] | null;
@@ -19,6 +36,8 @@ const CoordinateContext = createContext<CoordinateContextType | undefined>(undef
 export function CoordinateProvider({ children }: { children: ReactNode }) {
   const [selectedCoords, setSelectedCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [locationLabel, setLocationLabel] = useState<string>("");
+  const [selectedLocation, setSelectedLocation] = useState<LocationInfo | null>(null);
+  const [locationLoading, setLocationLoading] = useState(false);
   const [climateDataA, setClimateDataA] = useState<YearlyClimateData[] | null>(null);
   const [climateDataB, setClimateDataB] = useState<YearlyClimateData[] | null>(null);
 
@@ -29,6 +48,10 @@ export function CoordinateProvider({ children }: { children: ReactNode }) {
         setSelectedCoords,
         locationLabel,
         setLocationLabel,
+        selectedLocation,
+        setSelectedLocation,
+        locationLoading,
+        setLocationLoading,
         climateDataA,
         setClimateDataA,
         climateDataB,

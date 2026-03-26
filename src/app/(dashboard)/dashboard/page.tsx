@@ -9,7 +9,7 @@ import ClimateLineChart from "@/components/charts/ClimateLineChart";
 const WorldMap = dynamic(() => import("@/components/map/WorldMap"), { ssr: false });
 
 export default function DashboardPage() {
-  const { selectedCoords, locationLabel, climateDataA } = useCoordinateContext();
+  const { selectedCoords, locationLabel, climateDataA, selectedLocation } = useCoordinateContext();
   const { data, loading, error } = useClimateData(
     selectedCoords?.lat ?? null,
     selectedCoords?.lng ?? null,
@@ -21,6 +21,21 @@ export default function DashboardPage() {
     ? (data[data.length - 1].avgTemp - data[0].avgTemp).toFixed(1)
     : null;
 
+  const makeSparkline = (values: number[], width: number, height: number) => {
+    const min = Math.min(...values);
+    const max = Math.max(...values) || 1;
+    const range = max - min || 1;
+    const stepX = width / (values.length - 1 || 1);
+    return values.map((v, i) => {
+      const x = i * stepX;
+      const y = height - ((v - min) / range) * height;
+      return `${i === 0 ? "M" : "L"} ${x.toFixed(1)} ${y.toFixed(1)}`;
+    }).join(" ");
+  };
+
+  const heatPath = data ? makeSparkline(data.map(d => d.extremeHeatDays), 100, 20) : "";
+  const rainPath = data ? makeSparkline(data.map(d => d.extremeRainDays), 100, 20) : "";
+
   return (
     <>
       {/* Page header */}
@@ -29,10 +44,14 @@ export default function DashboardPage() {
           <div className="ph-title">GeoScience Dashboard</div>
           <div className="ph-sub" style={{ marginTop: 2 }}>Overview — 40yr Climate Analysis</div>
         </div>
-        <div style={{ fontSize: 8.5, color: "var(--dim)" }}>
-          {selectedCoords
-            ? `${locationLabel || `${selectedCoords.lat.toFixed(4)}°N, ${selectedCoords.lng.toFixed(4)}°E`} · 1985–2024`
-            : "Click map to select location"}
+        <div style={{ fontSize: 10, color: "var(--dim)", letterSpacing: "0.06em", fontFamily: "var(--mono)" }}>
+          {selectedLocation
+            ? selectedLocation.city + ", " + selectedLocation.country + "  ·  " +
+              Math.abs(selectedLocation.lat).toFixed(4) + "°" + (selectedLocation.lat >= 0 ? "N" : "S") + ", " +
+              Math.abs(selectedLocation.lng).toFixed(4) + "°" + (selectedLocation.lng >= 0 ? "E" : "W") + "  ·  1985–2024"
+            : selectedCoords
+            ? selectedCoords.lat.toFixed(4) + "°N, " + selectedCoords.lng.toFixed(4) + "°E  ·  1985–2024"
+            : "1985–2024"}
         </div>
       </div>
 
@@ -46,7 +65,7 @@ export default function DashboardPage() {
               <span className="ptag" style={{ borderColor: "var(--red)", color: "var(--red)" }}>Click to pin</span>
             </div>
           </div>
-          {typeof window !== "undefined" ? <WorldMap /> : <SkeletonLoader variant="map" />}
+          <WorldMap />
         </div>
 
         {/* CLIMATE TRENDS */}
@@ -118,17 +137,23 @@ export default function DashboardPage() {
                   Extreme events tracked across 40 years
                 </div>
                 <div className="stat-row">
-                  <div className="sc">
-                    <span className="sv" style={{ color: "var(--red)" }}>
+                  <div className="sc" style={{ position: "relative", overflow: "hidden" }}>
+                    <svg viewBox="0 -5 100 30" style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: "40px", opacity: 0.15, pointerEvents: "none" }} preserveAspectRatio="none">
+                      <path d={heatPath} fill="none" stroke="var(--red)" strokeWidth="2" className="sparkline-path" />
+                    </svg>
+                    <span className="sv" style={{ color: "var(--red)", position: "relative" }}>
                       {data.reduce((s, d) => s + d.extremeHeatDays, 0)}
                     </span>
-                    <span className="sl">Heat Days</span>
+                    <span className="sl" style={{ position: "relative" }}>Heat Days</span>
                   </div>
-                  <div className="sc">
-                    <span className="sv" style={{ color: "var(--blue)" }}>
+                  <div className="sc" style={{ position: "relative", overflow: "hidden" }}>
+                    <svg viewBox="0 -5 100 30" style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: "40px", opacity: 0.15, pointerEvents: "none" }} preserveAspectRatio="none">
+                      <path d={rainPath} fill="none" stroke="var(--blue)" strokeWidth="2" className="sparkline-path" />
+                    </svg>
+                    <span className="sv" style={{ color: "var(--blue)", position: "relative" }}>
                       {data.reduce((s, d) => s + d.extremeRainDays, 0)}
                     </span>
-                    <span className="sl">Rain Days</span>
+                    <span className="sl" style={{ position: "relative" }}>Rain Days</span>
                   </div>
                   <div className="sc">
                     <span className="sv">{data.length}</span>

@@ -9,12 +9,25 @@ import SkeletonLoader from "@/components/ui/SkeletonLoader";
 const PAGE_SIZE = 10;
 
 export default function ExportPage() {
-  const { selectedCoords, locationLabel } = useCoordinateContext();
+  const { selectedCoords, selectedLocation, locationLabel } = useCoordinateContext();
   const { data, loading } = useClimateData(selectedCoords?.lat ?? null, selectedCoords?.lng ?? null);
   const [page, setPage] = useState(0);
 
   const totalPages = data ? Math.ceil(data.length / PAGE_SIZE) : 0;
   const pageData = data ? data.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE) : [];
+
+  const locationDisplayName = selectedLocation?.city
+    ? selectedLocation.city + ", " + selectedLocation.country
+    : locationLabel || "Selected Location";
+
+  const locationMeta = selectedLocation
+    ? {
+        city: selectedLocation.city,
+        country: selectedLocation.country,
+        lat: selectedLocation.lat,
+        lng: selectedLocation.lng,
+      }
+    : undefined;
 
   return (
     <>
@@ -41,11 +54,12 @@ export default function ExportPage() {
                 {/* Preview table */}
                 <div>
                   <div style={{ fontSize: 8.5, color: "var(--dim)", marginBottom: 6 }}>
-                    Preview — {locationLabel || "Selected Location"} (1985–2024) · {data.length} records
+                    Preview — {locationDisplayName} (1985–2024) · {data.length} records
                   </div>
                   <div className="exp-table">
                     <div className="exp-row hd">
                       <div className="exp-cell">Year</div>
+                      <div className="exp-cell">City</div>
                       <div className="exp-cell">Avg Temp</div>
                       <div className="exp-cell">Precip mm</div>
                       <div className="exp-cell">Heat Days</div>
@@ -56,6 +70,7 @@ export default function ExportPage() {
                       return (
                         <div key={row.year} className="exp-row" style={isLatest ? { background: "color-mix(in srgb, var(--red) 5%, transparent)" } : undefined}>
                           <div className="exp-cell" style={isLatest ? { fontWeight: 700 } : undefined}>{row.year}</div>
+                          <div className="exp-cell" style={{ fontSize: 9, color: "var(--dim)" }}>{selectedLocation?.city || "—"}</div>
                           <div className="exp-cell" style={isLatest ? { color: "var(--red)", fontWeight: 700 } : undefined}>{row.avgTemp.toFixed(1)}°C</div>
                           <div className="exp-cell">{Math.round(row.totalPrecip).toLocaleString()}</div>
                           <div className="exp-cell" style={row.extremeHeatDays > 30 ? { color: "var(--red)", fontWeight: 700 } : undefined}>{row.extremeHeatDays}</div>
@@ -91,14 +106,35 @@ export default function ExportPage() {
 
                 {/* Export buttons */}
                 <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-                  <ExportButton data={data} label="Full dataset" filename={`geosense-${locationLabel}-full`} />
-                  <ExportButton data={data.filter(d => d.year >= 1985 && d.year <= 2004)} label="City A only" filename={`geosense-${locationLabel}-cityA`} />
-                  <ExportButton data={data.filter(d => d.year >= 2005)} label="City B only" filename={`geosense-${locationLabel}-cityB`} />
-                  <ExportButton data={data} label="Comparison" filename={`geosense-${locationLabel}-compare`} />
+                  <ExportButton
+                    data={data}
+                    label="Full dataset"
+                    filename="full"
+                    locationInfo={locationMeta}
+                  />
+                  <ExportButton
+                    data={data.filter(d => d.year >= 1985 && d.year <= 2004)}
+                    label="1985–2004"
+                    filename="period-a"
+                    locationInfo={locationMeta}
+                  />
+                  <ExportButton
+                    data={data.filter(d => d.year >= 2005)}
+                    label="2005–2024"
+                    filename="period-b"
+                    locationInfo={locationMeta}
+                  />
+                  <ExportButton
+                    data={data}
+                    label="Comparison"
+                    filename="comparison"
+                    locationInfo={locationMeta}
+                  />
                   <ExportButton
                     data={data.filter(d => d.extremeHeatDays > 0 || d.extremeRainDays > 0)}
                     label="Extremes only"
-                    filename={`geosense-${locationLabel}-extremes`}
+                    filename="extremes"
+                    locationInfo={locationMeta}
                     style={{ borderColor: "var(--red)", color: "var(--red)" }}
                   />
                 </div>

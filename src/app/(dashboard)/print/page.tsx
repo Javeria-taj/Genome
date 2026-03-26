@@ -51,7 +51,7 @@ export default function PrintPage() {
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
               <div style={{ width: 8, height: 8, background: "#e63a2e", borderRadius: "50%" }} />
-              <span style={{ fontWeight: 700, fontSize: 13, letterSpacing: ".1em" }}>GeoSense</span>
+              <span style={{ fontWeight: 700, fontSize: 13, letterSpacing: ".1em" }}>Genome</span>
             </div>
             <div style={{ fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontSize: 24, lineHeight: 1.2 }}>
               Climate Telemetry Report
@@ -62,7 +62,7 @@ export default function PrintPage() {
           </div>
           <div style={{ textAlign: "right", fontSize: 8, color: "#7a756e" }}>
             <div>Generated: {generatedAt}</div>
-            <div style={{ marginTop: 2 }}>GeoSense v2.0</div>
+            <div style={{ marginTop: 2 }}>Genome v3.0</div>
           </div>
         </div>
 
@@ -152,7 +152,7 @@ export default function PrintPage() {
         {/* Footer */}
         <div style={{ borderTop: "1px solid #0f0e0d", paddingTop: 10, marginTop: "auto", display: "flex", justifyContent: "space-between", fontSize: 8, color: "#7a756e" }}>
           <span>Data source: Open-Meteo Historical Weather API · archive-api.open-meteo.com</span>
-          <span>GeoSense v2.0 · Next.js + MongoDB</span>
+          <span>Genome v3.0 · Next.js + MongoDB</span>
         </div>
       </div>
     </div>

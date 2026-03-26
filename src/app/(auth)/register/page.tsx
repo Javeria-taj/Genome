@@ -7,8 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import axios from "axios";
 import toast from "react-hot-toast";
+import BrutalistEarth from "@/components/ui/BrutalistEarth";
+import axios from "axios";
 
 const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -41,7 +42,7 @@ export default function RegisterPage() {
       });
       await signIn("credentials", { email: data.email, password: data.password, redirect: false });
       setBtnState("success");
-      toast.success("Account created — welcome to GeoSense");
+      toast.success("Account created — welcome to Genome");
       setTimeout(() => router.push("/dashboard"), 800);
     } catch (err: any) {
       setBtnState("idle");
@@ -53,39 +54,40 @@ export default function RegisterPage() {
     <div className="login-shell">
       {/* LEFT ART PANEL */}
       <div className="left">
-        <div className="left-grid" />
-        <div style={{ position: "absolute", inset: 0 }}>
-          <div className="geo-ring" style={{ width: 320, height: 320, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
-          <div className="geo-ring" style={{ width: 220, height: 220, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
-          <div className="geo-ring" style={{ width: 120, height: 120, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
-          <div className="geo-cross-h" />
-          <div className="geo-cross-v" />
-          <svg className="left-paths" viewBox="0 0 400 700" preserveAspectRatio="xMidYMid slice" style={{ position:"absolute",inset:0,width:"100%",height:"100%" }}>
-            <path d="M0 210 Q200 190 400 210" fill="none" stroke="rgba(245,240,232,.07)" strokeWidth="1"/>
-            <path d="M0 350 Q200 330 400 350" fill="none" stroke="rgba(245,240,232,.07)" strokeWidth="1"/>
-            <path d="M200 0 Q190 350 200 700" fill="none" stroke="rgba(245,240,232,.06)" strokeWidth="1"/>
-            <circle cx="160" cy="260" r="2.5" fill="rgba(230,58,46,.5)"/>
-            <circle cx="280" cy="200" r="2.5" fill="rgba(26,110,245,.5)"/>
-            <circle cx="100" cy="400" r="2.5" fill="rgba(245,240,232,.3)"/>
-            <line x1="160" y1="260" x2="280" y2="200" stroke="rgba(230,58,46,.25)" strokeWidth=".8" strokeDasharray="3 3"/>
-          </svg>
-          <div className="center-ring" />
-          <div className="center-dot" />
-        </div>
+        <BrutalistEarth />
 
-        <div className="left-top">
+        <div className="left-top" style={{ position: "relative", zIndex: 10 }}>
           <div className="left-logo">
-            <div className="logo-pip" />
-            GeoSense
+            <svg width="22" height="22" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+              <defs>
+                <radialGradient id="fg" cx="35%" cy="32%" r="60%">
+                  <stop offset="0%" stopColor="#2c8fb5"/>
+                  <stop offset="70%" stopColor="#0e4d68"/>
+                  <stop offset="100%" stopColor="#072d3f"/>
+                </radialGradient>
+                <clipPath id="fc"><circle cx="16" cy="16" r="11" transform="rotate(-23.5,16,16)"/></clipPath>
+              </defs>
+              <ellipse cx="16" cy="16" rx="13.5" ry="13" fill="none" stroke="rgba(200,160,60,0.38)" strokeWidth="1.2" strokeDasharray="5 3" transform="rotate(-20,16,16)"/>
+              <circle cx="16" cy="16" r="11" fill="url(#fg)" transform="rotate(-23.5,16,16)"/>
+              <g clipPath="url(#fc)" stroke="none" fill="rgba(52,130,78,0.72)">
+                <ellipse cx="12" cy="13" rx="4" ry="3" transform="rotate(-10,12,13)"/>
+                <ellipse cx="20" cy="18" rx="3.5" ry="4" transform="rotate(8,20,18)"/>
+                <ellipse cx="10" cy="20" rx="2.2" ry="2"/>
+              </g>
+              <circle cx="16" cy="16" r="11" fill="none" stroke="rgba(100,190,230,0.3)" strokeWidth="2.5" transform="rotate(-23.5,16,16)"/>
+              <circle cx="16" cy="16" r="11" fill="none" stroke="rgba(100,190,230,0.08)" strokeWidth="5" transform="rotate(-23.5,16,16)"/>
+              <ellipse cx="16" cy="16" rx="13.5" ry="13" fill="none" stroke="rgba(212,168,60,0.9)" strokeWidth="1.8" strokeDasharray="5 3" transform="rotate(-20,16,16)" clipPath="url(#fc)"/>
+            </svg>
+            Genome
           </div>
         </div>
 
-        <div className="left-bottom">
-          <div className="left-headline">Map your world.<br/>Start tracking<br/>climate now.</div>
-          <div style={{ fontSize:8.5,color:"rgba(245,240,232,.4)",lineHeight:1.7 }}>
+        <div className="left-bottom" style={{ position: "relative", zIndex: 10 }}>
+          <div className="left-headline headline">Map your world.<br/>Start tracking<br/>climate now.</div>
+          <div className="subtext" style={{ fontSize:8.5,color:"rgba(245,240,232,.4)",lineHeight:1.7 }}>
             Join thousands of researchers<br/>analysing global climate patterns.
           </div>
-          <div className="left-stats">
+          <div className="left-stats stats-grid">
             <div className="ls-cell"><span className="ls-val">∞</span><div className="ls-lbl">Locations</div></div>
             <div className="ls-cell"><span className="ls-val">40yr</span><div className="ls-lbl">Coverage</div></div>
             <div className="ls-cell"><span className="ls-val">Free</span><div className="ls-lbl">Always</div></div>
@@ -99,9 +101,6 @@ export default function RegisterPage() {
       <div className="right">
         <div className="right-top">
           <span className="right-top-label">Create your account</span>
-          <Link href="/login" style={{ fontSize:8.5,color:"var(--blue)",textDecoration:"underline",fontFamily:"var(--mono)" }}>
-            Sign in →
-          </Link>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -115,7 +114,7 @@ export default function RegisterPage() {
 
           <div className="field">
             <label className="field-label">Email address</label>
-            <input {...register("email")} className="field-input" type="email" placeholder="user@geosense.io" />
+            <input {...register("email")} className="field-input" type="email" placeholder="user@genome.io" />
             {errors.email && <div className="field-hint" style={{ color:"var(--red)" }}>{errors.email.message}</div>}
           </div>
 
@@ -139,11 +138,14 @@ export default function RegisterPage() {
             {btnState === "loading" && "Creating account..."}
             {btnState === "success" && <><span style={{ width:14,height:14,border:"1.5px solid var(--paper)",display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:9 }}>✓</span> Account Created — Redirecting</>}
           </button>
+          
+          <div style={{ marginTop: "12px", display: "flex", justifyContent: "center" }}>
+            <Link href="/login" style={{ fontSize: "10px", color: "var(--ink)", textDecoration: "underline" }}>Already have an account? Sign in</Link>
+          </div>
         </form>
 
         <div className="form-footer">
-          <span>GeoSense v2.0 · Next.js + MongoDB</span>
-          <Link href="/login" style={{ color:"var(--blue)",textDecoration:"underline" }}>Already have an account?</Link>
+          <span>Genome v3.0 · Next.js + MongoDB</span>
         </div>
       </div>
     </div>

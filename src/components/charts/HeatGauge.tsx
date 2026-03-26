@@ -46,27 +46,25 @@ export default function HeatGauge({ delta, previousDelta = 0 }: HeatGaugeProps) 
 
   return (
     <div>
-      {/* Main gauge */}
-      <div style={{ marginBottom: 4 }}>
-        <div className="gauge-track">
-          <div
-            className="gauge-fill"
-            style={{ width: `${fillPct}%`, background: color, transition: "width .6s cubic-bezier(.4,0,.2,1), background .4s" }}
-          >
-            <div className="gauge-label">
-              {sign}{displayDelta.toFixed(1)}°C
-            </div>
-          </div>
-          {/* Segment dividers */}
-          <div style={{ position: "absolute", inset: 0, display: "flex", pointerEvents: "none" }}>
-            {[0,1,2,3].map(i => (
-              <div key={i} style={{ flex: 1, borderRight: i < 3 ? "1.5px solid var(--paper)" : "none", opacity: .4 }} />
-            ))}
-          </div>
+      {/* Main SVG Gauge */}
+      <div style={{ position: "relative", width: "100%", maxWidth: "200px", margin: "0 auto", height: 75, marginBottom: 12 }}>
+        <svg viewBox="0 0 100 50" style={{ width: "100%", height: "100%", overflow: "visible" }}>
+          <path d="M 10 45 A 40 40 0 0 1 90 45" fill="none" stroke="var(--paper2)" strokeWidth="10" strokeLinecap="square" />
+          <path d="M 10 45 A 40 40 0 0 1 90 45" fill="none" stroke={color} strokeWidth="10" strokeLinecap="square"
+                strokeDasharray={Math.PI * 40}
+                strokeDashoffset={Math.PI * 40 * (1 - fillPct / 100)}
+                style={{ transition: "stroke-dashoffset 0.1s linear, stroke 0.4s" }} />
+          {/* Tick marks */}
+          <line x1="50" y1="5" x2="50" y2="0" stroke="var(--dim)" strokeWidth="1" />
+          <line x1="10" y1="45" x2="4" y2="45" stroke="var(--dim)" strokeWidth="1" />
+          <line x1="90" y1="45" x2="96" y2="45" stroke="var(--dim)" strokeWidth="1" />
+        </svg>
+        <div style={{ position: "absolute", bottom: -8, left: 0, right: 0, textAlign: "center", fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 24, fontWeight: 700, color: "var(--ink)", letterSpacing: "-0.02em" }}>
+          {sign}{displayDelta.toFixed(1)}°
         </div>
-        <div className="gauge-scale">
-          <span>0°C</span><span>1°C</span><span>2°C</span><span>3°C</span><span>4°C</span>
-        </div>
+      </div>
+      <div className="gauge-scale" style={{ maxWidth: "200px", margin: "0 auto 12px" }}>
+        <span>0°C</span><span>2°C</span><span>4°C+</span>
       </div>
 
       {/* Decade mini-bars */}

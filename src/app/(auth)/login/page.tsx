@@ -1,12 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import toast from "react-hot-toast";
+import BrutalistEarth from "@/components/ui/BrutalistEarth";
 
 const schema = z.object({
   email: z.string().email("Invalid email address"),
@@ -17,14 +20,23 @@ type FormData = z.infer<typeof schema>;
 export default function LoginPage() {
   const router = useRouter();
   const [btnState, setBtnState] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [errorMsg, setErrorMsg] = useState("");
   const [termLines, setTermLines] = useState([false, false, false]);
+  const [stars, setStars] = useState<{ x: number; y: number; r: number }[]>([]);
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
-  // Terminal animation
+  useEffect(() => {
+    setStars(
+      Array.from({ length: 40 }).map(() => ({
+        x: Math.random() * 500,
+        y: Math.random() * 700,
+        r: Math.random() * 1.5 + 0.5,
+      }))
+    );
+  }, []);
+
   useEffect(() => {
     const timers = [
       setTimeout(() => setTermLines(p => [true, p[1], p[2]]), 300),
@@ -34,9 +46,22 @@ export default function LoginPage() {
     return () => timers.forEach(clearTimeout);
   }, []);
 
+  useEffect(() => {
+    const el = document.getElementById("stat-pts");
+    if (!el) return;
+    const target = 14600;
+    let current = 0;
+    const step = target / 60;
+    const timer = setInterval(() => {
+      current = Math.min(current + step, target);
+      el.textContent = Math.round(current).toLocaleString();
+      if (current >= target) clearInterval(timer);
+    }, 25);
+    return () => clearInterval(timer);
+  }, []);
+
   const onSubmit = async (data: FormData) => {
     setBtnState("loading");
-    setErrorMsg("");
     const result = await signIn("credentials", {
       email: data.email,
       password: data.password,
@@ -47,92 +72,122 @@ export default function LoginPage() {
       setTimeout(() => router.push("/dashboard"), 800);
     } else {
       setBtnState("error");
-      setErrorMsg("Invalid credentials — please try again.");
+      toast.error("Invalid credentials — please try again.");
     }
   };
 
   const btnText = {
-    idle: <><span style={{ width:14,height:14,border:'1.5px solid var(--paper)',display:'inline-flex',alignItems:'center',justifyContent:'center',fontSize:9 }}>→</span> Authenticate &amp; Enter Dashboard</>,
+    idle: (
+      <>
+        <span style={{ width: 14, height: 14, border: "1.5px solid var(--paper)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 9 }}>
+          {"\u2192"}
+        </span>
+        {" Authenticate & Enter Dashboard"}
+      </>
+    ),
     loading: "Authenticating...",
-    success: <><span style={{ width:14,height:14,border:'1.5px solid var(--paper)',display:'inline-flex',alignItems:'center',justifyContent:'center',fontSize:9 }}>✓</span> Access Granted — Redirecting</>,
-    error: <><span style={{ width:14,height:14,border:'1.5px solid var(--paper)',display:'inline-flex',alignItems:'center',justifyContent:'center',fontSize:9 }}>→</span> Authenticate &amp; Enter Dashboard</>,
+    success: (
+      <>
+        <span style={{ width: 14, height: 14, border: "1.5px solid var(--paper)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 9 }}>
+          {"\u2713"}
+        </span>
+        {" Access Granted \u2014 Redirecting"}
+      </>
+    ),
+    error: (
+      <>
+        <span style={{ width: 14, height: 14, border: "1.5px solid var(--paper)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 9 }}>
+          {"\u2192"}
+        </span>
+        {" Authenticate & Enter Dashboard"}
+      </>
+    ),
   };
 
   return (
     <div className="login-shell">
       {/* LEFT ART PANEL */}
-      <div className="left">
-        <div className="left-grid" />
+      <div className="left login-left">
 
-        {/* Geo decoration */}
-        <div style={{ position: "absolute", inset: 0 }}>
-          <div className="geo-ring" style={{ width: 320, height: 320, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
-          <div className="geo-ring" style={{ width: 220, height: 220, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
-          <div className="geo-ring" style={{ width: 120, height: 120, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
-          <div className="geo-cross-h" />
-          <div className="geo-cross-v" />
-          <svg className="left-paths" viewBox="0 0 400 700" preserveAspectRatio="xMidYMid slice" style={{ position:"absolute",inset:0,width:"100%",height:"100%" }}>
-            <path d="M0 210 Q200 190 400 210" fill="none" stroke="rgba(245,240,232,.07)" strokeWidth="1"/>
-            <path d="M0 280 Q200 260 400 280" fill="none" stroke="rgba(245,240,232,.07)" strokeWidth="1"/>
-            <path d="M0 350 Q200 330 400 350" fill="none" stroke="rgba(245,240,232,.07)" strokeWidth="1"/>
-            <path d="M0 420 Q200 400 400 420" fill="none" stroke="rgba(245,240,232,.07)" strokeWidth="1"/>
-            <path d="M120 0 Q110 350 120 700" fill="none" stroke="rgba(245,240,232,.06)" strokeWidth="1"/>
-            <path d="M200 0 Q190 350 200 700" fill="none" stroke="rgba(245,240,232,.06)" strokeWidth="1"/>
-            <path d="M280 0 Q270 350 280 700" fill="none" stroke="rgba(245,240,232,.06)" strokeWidth="1"/>
-            <circle cx="140" cy="240" r="2.5" fill="rgba(230,58,46,.5)"/>
-            <circle cx="260" cy="180" r="2.5" fill="rgba(26,110,245,.5)"/>
-            <circle cx="80" cy="380" r="2.5" fill="rgba(245,240,232,.3)"/>
-            <circle cx="320" cy="420" r="2.5" fill="rgba(245,240,232,.3)"/>
-            <line x1="140" y1="240" x2="260" y2="180" stroke="rgba(230,58,46,.25)" strokeWidth=".8" strokeDasharray="3 3"/>
-            <line x1="260" y1="180" x2="320" y2="420" stroke="rgba(26,110,245,.2)" strokeWidth=".8" strokeDasharray="4 4"/>
-          </svg>
-          <div className="center-ring" />
-          <div className="center-dot" />
-        </div>
+        {/* Animated 3D Earth */}
+        <BrutalistEarth />
 
-        {/* Top logo */}
-        <div className="left-top">
-          <div className="left-logo">
-            <div className="logo-pip" />
-            GeoSense
+        {/* Text overlay */}
+        <div className="login-left-content" style={{ position: "relative", zIndex: 10 }}>
+          <div className="login-logo">
+            <svg width="22" height="22" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+              <defs>
+                <radialGradient id="fg" cx="35%" cy="32%" r="60%">
+                  <stop offset="0%" stopColor="#2c8fb5"/>
+                  <stop offset="70%" stopColor="#0e4d68"/>
+                  <stop offset="100%" stopColor="#072d3f"/>
+                </radialGradient>
+                <clipPath id="fc"><circle cx="16" cy="16" r="11" transform="rotate(-23.5,16,16)"/></clipPath>
+              </defs>
+              <ellipse cx="16" cy="16" rx="13.5" ry="13" fill="none" stroke="rgba(200,160,60,0.38)" strokeWidth="1.2" strokeDasharray="5 3" transform="rotate(-20,16,16)"/>
+              <circle cx="16" cy="16" r="11" fill="url(#fg)" transform="rotate(-23.5,16,16)"/>
+              <g clipPath="url(#fc)" stroke="none" fill="rgba(52,130,78,0.72)">
+                <ellipse cx="12" cy="13" rx="4" ry="3" transform="rotate(-10,12,13)"/>
+                <ellipse cx="20" cy="18" rx="3.5" ry="4" transform="rotate(8,20,18)"/>
+                <ellipse cx="10" cy="20" rx="2.2" ry="2"/>
+              </g>
+              <circle cx="16" cy="16" r="11" fill="none" stroke="rgba(100,190,230,0.3)" strokeWidth="2.5" transform="rotate(-23.5,16,16)"/>
+              <circle cx="16" cy="16" r="11" fill="none" stroke="rgba(100,190,230,0.08)" strokeWidth="5" transform="rotate(-23.5,16,16)"/>
+              <ellipse cx="16" cy="16" rx="13.5" ry="13" fill="none" stroke="rgba(212,168,60,0.9)" strokeWidth="1.8" strokeDasharray="5 3" transform="rotate(-20,16,16)" clipPath="url(#fc)"/>
+            </svg>
+            <span>Genome</span>
           </div>
-        </div>
 
-        {/* Bottom content */}
-        <div className="left-bottom">
-          <div className="left-headline">40 years of<br/>climate data,<br/>mapped.</div>
-          <div style={{ fontSize:8.5,color:"rgba(245,240,232,.4)",lineHeight:1.7 }}>
-            Historical weather analysis powered<br/>by Open-Meteo API · 1985 – 2024
+          <div className="login-headline headline">
+            Map your world.<br />
+            Track the climate.<br />
+            <em>40 years of data.</em>
           </div>
-          <div className="left-stats">
-            <div className="ls-cell"><span className="ls-val">14,600</span><div className="ls-lbl">Data points</div></div>
-            <div className="ls-cell"><span className="ls-val">40yr</span><div className="ls-lbl">Coverage</div></div>
-            <div className="ls-cell"><span className="ls-val">+2.1°</span><div className="ls-lbl">Avg rise</div></div>
-            <div className="ls-cell"><span className="ls-val">∞</span><div className="ls-lbl">Locations</div></div>
+
+          <p className="login-subtext subtext">
+            Historical weather analysis powered by Open-Meteo API.<br />
+            Visualise temperature, precipitation &amp; extreme events<br />
+            across any location on Earth.
+          </p>
+
+          <div className="login-stats stats-grid">
+            <div className="ls">
+              <span className="ls-val" id="stat-pts">0</span>
+              <span className="ls-lbl">Data points</span>
+            </div>
+            <div className="ls">
+              <span className="ls-val">40yr</span>
+              <span className="ls-lbl">Coverage</span>
+            </div>
+            <div className="ls">
+              <span className="ls-val">+2.1&deg;</span>
+              <span className="ls-lbl">Avg rise</span>
+            </div>
+            <div className="ls">
+              <span className="ls-val">&infin;</span>
+              <span className="ls-lbl">Locations</span>
+            </div>
           </div>
-          <div className="left-coords">13.0827° N &nbsp;·&nbsp; 80.2707° E &nbsp;·&nbsp; Chennai, IN</div>
         </div>
       </div>
 
       {/* RIGHT FORM PANEL */}
       <div className="right">
         <div className="right-top">
-          <span className="right-top-label">Sign in to GeoSense</span>
-          <Link href="/register" style={{ fontSize:8.5,color:"var(--blue)",textDecoration:"underline",fontFamily:"var(--mono)" }}>
-            Create account →
-          </Link>
+          <span className="right-top-label">Sign in to Genome</span>
         </div>
 
         {/* Terminal animation */}
         <div className="terminal">
-          <div className="term-line" style={{ opacity: termLines[0] ? 1 : 0, transition:"opacity .4s" }}>
-            <b>$</b> geosense --init
+          <div className="term-line" style={{ opacity: termLines[0] ? 1 : 0, transition: "opacity .4s" }}>
+            <b>$</b> genome --connect
           </div>
-          <div className="term-line" style={{ opacity: termLines[1] ? 1 : 0, transition:"opacity .4s" }}>
-            Connecting to Open-Meteo archive... <b style={{ color:"#2ecc71" }}>OK</b>
+          <div className="term-line" style={{ opacity: termLines[1] ? 1 : 0, transition: "opacity .4s" }}>
+            Initialising climate archive...{" "}<b style={{ color: "#2ecc71" }}>OK</b>
           </div>
-          <div className="term-line" style={{ opacity: termLines[2] ? 1 : 0, transition:"opacity .4s" }}>
-            Loading 40yr dataset... <b>Ready.</b> {termLines[2] && <span className="term-cursor" />}
+          <div className="term-line" style={{ opacity: termLines[2] ? 1 : 0, transition: "opacity .4s" }}>
+            40yr dataset ready. Awaiting credentials.{" "}
+            {termLines[2] && <span className="term-cursor" />}
           </div>
         </div>
 
@@ -142,37 +197,50 @@ export default function LoginPage() {
 
           <div className="field">
             <label className="field-label">Email address</label>
-            <input {...register("email")} className="field-input" type="email" placeholder="user@geosense.io" />
-            {errors.email && <div className="field-hint" style={{ color:"var(--red)" }}>{errors.email.message}</div>}
+            <input {...register("email")} className="field-input" type="email" placeholder="user@genome.io" />
+            {errors.email && (
+              <div className="field-hint" style={{ color: "var(--accent)" }}>{errors.email.message}</div>
+            )}
           </div>
 
           <div className="field">
             <label className="field-label">Password</label>
-            <input {...register("password")} className="field-input" type="password" placeholder="••••••••••••" />
-            <div className="field-hint">Min. 8 characters · case-sensitive</div>
-            {errors.password && <div className="field-hint" style={{ color:"var(--red)" }}>{errors.password.message}</div>}
+            <input {...register("password")} className="field-input" type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" />
+            <div className="field-hint">Min. 8 characters &middot; case-sensitive</div>
+            {errors.password && (
+              <div className="field-hint" style={{ color: "var(--accent)" }}>{errors.password.message}</div>
+            )}
           </div>
 
-          {(btnState === "error" || errorMsg) && (
-            <div className="error-box">{errorMsg || "Invalid credentials — please try again."}</div>
-          )}
 
-          <button type="submit" className="btn-primary" disabled={btnState === "loading" || btnState === "success"}>
+
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={btnState === "loading" || btnState === "success"}
+          >
             {btnText[btnState]}
           </button>
+          <div style={{ marginTop: "12px", display: "flex", justifyContent: "space-between" }}>
+            <Link href="/register" style={{ fontSize: "10px", color: "var(--ink)", textDecoration: "underline" }}>Create account</Link>
+            <span style={{ fontSize: "10px", color: "var(--ink)", textDecoration: "underline", cursor: "pointer" }}>Forgot password?</span>
+          </div>
         </form>
 
         <div className="divider">or</div>
 
         <div className="field" style={{ marginBottom: 0 }}>
           <label className="field-label">Access token</label>
-          <input className="field-input" type="text" placeholder="gso_xxxxxxxxxxxxxxxx" />
+          <input className="field-input" type="text" placeholder="gno_xxxxxxxxxxxxxxxx" />
           <div className="field-hint">For API / programmatic access</div>
         </div>
 
         <div className="form-footer">
-          <span>GeoSense v2.0 · Next.js + MongoDB</span>
-          <span style={{ color:"var(--blue)",cursor:"pointer",textDecoration:"underline" }}>Forgot password?</span>
+          <span>Genome v3.0 &middot; Next.js + MongoDB</span>
+        </div>
+
+        <div style={{ marginTop: "10px", textAlign: "center", fontSize: "9px", color: "var(--dim)", letterSpacing: "0.06em" }}>
+          Data &middot; open-meteo.com/en/docs/historical-weather-api
         </div>
       </div>
     </div>

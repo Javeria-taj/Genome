@@ -34,6 +34,8 @@ export default function ComparePage() {
   const [coordsB, setCoordsB] = useState<{ lat: number; lng: number } | null>(null);
   const [labelA, setLabelA] = useState("City A");
   const [labelB, setLabelB] = useState("City B");
+  const [countryA, setCountryA] = useState("");
+  const [countryB, setCountryB] = useState("");
 
   const { data: dataA, loading: loadingA } = useClimateData(coordsA?.lat ?? null, coordsA?.lng ?? null);
   const { data: dataB, loading: loadingB } = useClimateData(coordsB?.lat ?? null, coordsB?.lng ?? null);
@@ -43,6 +45,11 @@ export default function ComparePage() {
   const fasterLabel = rateA > rateB ? labelA : labelB;
   const slowerLabel = rateA > rateB ? labelB : labelA;
   const ratio = rateB !== 0 && rateA !== 0 ? (Math.max(rateA, rateB) / Math.min(rateA, rateB)).toFixed(1) : null;
+
+  // Parse city name from label (label comes from CitySearchInput as "City, Region, Country")
+  const parseCityName = (label: string) => label.split(",")[0].trim();
+  const cityAName = parseCityName(labelA);
+  const cityBName = parseCityName(labelB);
 
   return (
     <>
@@ -66,20 +73,82 @@ export default function ComparePage() {
               <div>
                 <div style={{ fontSize: 8.5, color: "var(--red)", textTransform: "uppercase", letterSpacing: ".1em", marginBottom: 5, fontWeight: 700 }}>City A</div>
                 <CitySearchInput
-                  onSelect={(city, lat, lng) => { setCoordsA({ lat, lng }); setLabelA(city); }}
+                  onSelect={(city, lat, lng) => {
+                    setCoordsA({ lat, lng });
+                    setLabelA(city);
+                    // Extract country from label (last part after last comma)
+                    const parts = city.split(",");
+                    setCountryA(parts[parts.length - 1]?.trim() || "");
+                  }}
                   placeholder="Search City A..."
                 />
               </div>
               <div>
                 <div style={{ fontSize: 8.5, color: "var(--blue)", textTransform: "uppercase", letterSpacing: ".1em", marginBottom: 5, fontWeight: 700 }}>City B</div>
                 <CitySearchInput
-                  onSelect={(city, lat, lng) => { setCoordsB({ lat, lng }); setLabelB(city); }}
+                  onSelect={(city, lat, lng) => {
+                    setCoordsB({ lat, lng });
+                    setLabelB(city);
+                    const parts = city.split(",");
+                    setCountryB(parts[parts.length - 1]?.trim() || "");
+                  }}
                   placeholder="Search City B..."
                 />
               </div>
             </div>
           </div>
         </div>
+
+        {/* City name header card — shown when at least one city is selected */}
+        {(coordsA || coordsB) && (
+          <div className="panel panel-full" style={{ padding: 0 }}>
+            <div style={{
+              display: "grid", gridTemplateColumns: "1fr 1fr",
+              gap: 0, border: "none",
+            }}>
+              <div style={{
+                padding: "10px 14px", borderRight: "1px solid var(--ink)",
+                borderLeft: "4px solid var(--red)",
+                display: "flex", alignItems: "center", gap: 10,
+                background: "var(--paper)",
+              }}>
+                <div>
+                  <div style={{ fontSize: "8.5px", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--dim)" }}>City A</div>
+                  <div style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", fontFamily: "Space Mono" }}>
+                    {cityAName !== "City A" ? cityAName : "Select a city"}
+                  </div>
+                  {countryA && <div style={{ fontSize: "9.5px", color: "var(--dim)", fontFamily: "Space Mono" }}>{countryA}</div>}
+                </div>
+                <div style={{ marginLeft: "auto", textAlign: "right" }}>
+                  <div style={{ width: "28px", height: "3px", background: "var(--red)", marginBottom: "3px" }} />
+                  <div style={{ fontSize: "9px", color: "var(--dim)" }}>Temp Line</div>
+                </div>
+              </div>
+
+              <div style={{
+                padding: "10px 14px",
+                borderLeft: "4px solid var(--blue)",
+                display: "flex", alignItems: "center", gap: 10,
+                background: "var(--paper)",
+              }}>
+                <div>
+                  <div style={{ fontSize: "8.5px", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--dim)" }}>City B</div>
+                  <div style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", fontFamily: "Space Mono" }}>
+                    {cityBName !== "City B" ? cityBName : "Select a city"}
+                  </div>
+                  {countryB && <div style={{ fontSize: "9.5px", color: "var(--dim)", fontFamily: "Space Mono" }}>{countryB}</div>}
+                </div>
+                <div style={{ marginLeft: "auto", textAlign: "right" }}>
+                  <div style={{
+                    width: "28px", height: "2px", background: "var(--blue)", marginBottom: "3px",
+                    backgroundImage: "repeating-linear-gradient(90deg, var(--blue) 0, var(--blue) 5px, transparent 5px, transparent 8px)",
+                  }} />
+                  <div style={{ fontSize: "9px", color: "var(--dim)" }}>Temp Line</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Comparison Chart */}
         <div className="panel panel-full">
@@ -92,18 +161,22 @@ export default function ComparePage() {
               <SkeletonLoader variant="chart" />
             ) : dataA && dataB ? (
               <>
-                <ComparisonChart dataA={dataA} dataB={dataB} labelA={labelA} labelB={labelB} />
+                <ComparisonChart dataA={dataA} dataB={dataB} labelA={cityAName} labelB={cityBName} />
                 <div style={{ display: "flex", gap: 14, marginTop: 8 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 8.5, color: "var(--dim)" }}>
-                    <div style={{ width: 16, height: 2, background: "var(--red)" }} />{labelA} (A) — +{(rateA * 40).toFixed(1)}°C
+                    <div style={{ width: 16, height: 2, background: "var(--red)" }} />
+                    {cityAName} — +{(rateA * 40).toFixed(1)}°C
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 8.5, color: "var(--dim)" }}>
-                    <div style={{ width: 16, height: 2, background: "var(--blue)", opacity: .7 }} />{labelB} (B) — +{(rateB * 40).toFixed(1)}°C
+                    <div style={{ width: 16, height: 2, background: "var(--blue)", opacity: .7 }} />
+                    {cityBName} — +{(rateB * 40).toFixed(1)}°C
                   </div>
                 </div>
                 {ratio && (
                   <div className="warming-badge" style={{ marginTop: 9 }}>
-                    <b>{fasterLabel}</b> warming <b>{ratio}× faster</b> than {slowerLabel} over 40yr
+                    <b style={{ color: "var(--accent)" }}>{fasterLabel}</b> warming{" "}
+                    <b style={{ color: "var(--accent)" }}>{ratio}× faster</b> than{" "}
+                    <b style={{ color: "var(--blue)" }}>{slowerLabel}</b> over 40yr
                   </div>
                 )}
               </>
@@ -121,8 +194,8 @@ export default function ComparePage() {
               <div className="exp-table">
                 <div className="exp-row hd">
                   <div className="exp-cell">Decade</div>
-                  <div className="exp-cell" style={{ color: "var(--red)" }}>{labelA} Avg °C</div>
-                  <div className="exp-cell" style={{ color: "var(--blue)" }}>{labelB} Avg °C</div>
+                  <div className="exp-cell" style={{ color: "var(--red)" }}>{cityAName} Avg °C</div>
+                  <div className="exp-cell" style={{ color: "var(--blue)" }}>{cityBName} Avg °C</div>
                   <div className="exp-cell">Δ</div>
                 </div>
                 {DECADE_RANGES.map(d => {

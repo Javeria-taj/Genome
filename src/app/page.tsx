@@ -10,7 +10,7 @@ export default async function LandingPage() {
       {/* Logo */}
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 32 }}>
         <div style={{ width: 9, height: 9, background: "#e63a2e", borderRadius: "50%" }} />
-        <span style={{ fontWeight: 700, fontSize: 18, letterSpacing: ".08em" }}>GeoSense</span>
+        <span style={{ fontWeight: 700, fontSize: 18, letterSpacing: ".08em" }}>Genome</span>
       </div>
 
       {/* Headline */}
@@ -57,7 +57,7 @@ export default async function LandingPage() {
       </div>
 
       <div style={{ marginTop: 32, fontSize: 8, color: "var(--dim,#7a756e)", letterSpacing: ".06em" }}>
-        GeoSense v2.0 · Next.js + MongoDB + Open-Meteo
+        Genome v3.0 · Next.js + MongoDB + Open-Meteo
       </div>
     </div>
   );

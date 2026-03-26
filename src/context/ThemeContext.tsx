@@ -13,7 +13,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem("geosense-theme");
+    // Migrate old geosense-theme key to genome-theme
+    const old = localStorage.getItem("geosense-theme");
+    if (old) {
+      localStorage.setItem("genome-theme", old);
+      localStorage.removeItem("geosense-theme");
+    }
+
+    const stored = localStorage.getItem("genome-theme");
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     const dark = stored ? stored === "dark" : prefersDark;
     setIsDark(dark);
@@ -23,7 +30,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const toggle = () => {
     const next = !isDark;
     setIsDark(next);
-    localStorage.setItem("geosense-theme", next ? "dark" : "light");
+    localStorage.setItem("genome-theme", next ? "dark" : "light");
     document.documentElement.classList.toggle("dark", next);
   };
 

@@ -24,7 +24,7 @@ export default async function DashboardLayout({
         </div>
         {/* Bottom status bar */}
         <div className="bbar no-print">
-          <span>GeoSense v2.0</span>
+          <span>Genome v3.0</span>
           <span>40yr · 14,600 pts</span>
           <span style={{ marginLeft: "auto", color: "var(--dim2)", fontSize: 8 }}>open-meteo.com/en/docs/historical-weather-api</span>
         </div>
