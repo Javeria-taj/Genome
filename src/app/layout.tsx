@@ -31,7 +31,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${spaceMono.variable} ${instrumentSerif.variable}`}>
-        {children}
+        <div className="page-enter">
+          {children}
+        </div>
         <Toaster
           position="bottom-right"
           toastOptions={{

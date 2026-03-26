@@ -116,19 +116,19 @@ export default function ClimateLineChart({ data }: Props) {
     scales: {
       x: {
         grid: { color: gridColor, lineWidth: 0.5 },
-        ticks: { color: dimColor, font: { family: "Space Mono", size: 10 } },
+        ticks: { color: dimColor, font: { family: "Space Mono", size: 11 } },
         border: { color: inkColor, width: 1.2 },
       },
       y: {
         position: "left",
         grid: { color: gridColor, lineWidth: 0.5 },
-        ticks: { color: accentColor, font: { family: "Space Mono", size: 10 }, callback: v => v + "\u00b0" },
+        ticks: { color: accentColor, font: { family: "Space Mono", size: 11 }, callback: v => v + "\u00b0" },
         border: { color: inkColor, width: 1.2 },
       },
       y1: {
         position: "right",
         grid: { drawOnChartArea: false },
-        ticks: { color: blueColor, font: { family: "Space Mono", size: 10 }, callback: v => v + "mm" },
+        ticks: { color: blueColor, font: { family: "Space Mono", size: 11 }, callback: v => v + "mm" },
         border: { color: blueColor, width: 1 },
       },
     },
@@ -179,22 +179,49 @@ export default function ClimateLineChart({ data }: Props) {
   };
 
   return (
-    <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: "10px" }}>
-      {/* Legend Row */}
+    <div style={{ position: "relative", display: "flex", flexDirection: "column" }}>
+      {/* Chart wrapper — explicit height, overflow hidden */}
       <div style={{
-        display: "flex", gap: "20px", alignItems: "center",
-        padding: "8px 0", borderBottom: "1px solid " + inkColor + "20",
+        position: 'relative',
+        height: '180px',
+        marginBottom: '12px',
+        overflow: 'hidden',
+      }}>
+        <Line
+          plugins={[trendLinePlugin]}
+          data={chartData}
+          options={options as any}
+          key={isDark ? "dark" : "light"}
+          id="climate-line"
+        />
+      </div>
+
+      {/* Legend row — sits BELOW chart, never overlapped */}
+      <div className="chart-legend" style={{
+        position: 'relative',
+        zIndex: 2,
+        display: 'flex',
+        gap: '20px',
+        paddingTop: '10px',
+        paddingBottom: '10px',
+        borderTopWidth: '1px',
+        borderTopStyle: 'solid',
+        borderTopColor: 'rgba(15,14,13,0.12)',
+        borderBottomWidth: '1px',
+        borderBottomStyle: 'solid',
+        borderBottomColor: 'rgba(15,14,13,0.12)',
+        marginBottom: '10px',
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <div style={{ width: "24px", height: "2.5px", background: "var(--accent)" }} />
-          <span style={{ fontSize: "11px", color: inkColor, fontFamily: "Space Mono" }}>
-            Avg Temperature
+          <div style={{ width: "24px", height: "2.5px", background: accentColor }} />
+          <span style={{ color: inkColor, fontFamily: "Space Mono" }}>
+            Avg Temp
           </span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <div style={{ width: "24px", height: "2px", background: "var(--blue)", opacity: 0.8 }} />
-          <span style={{ fontSize: "11px", color: inkColor, fontFamily: "Space Mono" }}>
-            Precipitation (mm)
+          <div style={{ width: "24px", height: "2px", background: blueColor, opacity: 0.8 }} />
+          <span style={{ color: inkColor, fontFamily: "Space Mono" }}>
+            Precip (mm)
           </span>
         </div>
       </div>
@@ -221,26 +248,6 @@ export default function ClimateLineChart({ data }: Props) {
           {data[selectedYearIndex].extremeHeatDays}d
         </div>
       )}
-
-      {/* Chart Canvas */}
-      <div
-        ref={wrapperRef}
-        style={{
-          background: isDark ? "var(--paper2)" : "var(--paper)",
-          border: "1px solid " + inkColor,
-          padding: "12px",
-          position: "relative",
-          height: 150,
-        }}
-      >
-        <Line
-          plugins={[trendLinePlugin]}
-          data={chartData}
-          options={options as any}
-          key={isDark ? "dark" : "light"}
-          id="climate-line"
-        />
-      </div>
     </div>
   );
 }

@@ -13,6 +13,8 @@ export interface IUser extends Document {
   name: string;
   createdAt: Date;
   savedLocations: ISavedLocation[];
+  resetToken?: string;
+  resetTokenExpires?: Date;
 }
 
 const SavedLocationSchema = new Schema<ISavedLocation>({
@@ -28,6 +30,8 @@ const UserSchema = new Schema<IUser>({
   name: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   savedLocations: [SavedLocationSchema],
+  resetToken: { type: String, select: false },
+  resetTokenExpires: { type: Date, select: false },
 });
 
 export default mongoose.models.User || mongoose.model<IUser>("User", UserSchema);

@@ -11,10 +11,21 @@ export async function GET(req: Request) {
   }
 
   try {
-    const fetchDecade = async (start: string, end: string) => {
-      const url = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lng}&start_date=${start}&end_date=${end}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto`;
-      const res = await axios.get(url);
-      return res.data;
+    const fetchWithRetry = async (start: string, end: string, retries = 3, delay = 1200) => {
+      for (let i = 0; i < retries; i++) {
+        try {
+          const url = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lng}&start_date=${start}&end_date=${end}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto`;
+          const res = await axios.get(url);
+          return res.data;
+        } catch (err: any) {
+          if (err.response?.status === 429 && i < retries - 1) {
+            console.warn(`Rate limit hit for ${start}. Retrying in ${delay}ms...`);
+            await new Promise(resolve => setTimeout(resolve, delay * (i + 1)));
+            continue;
+          }
+          throw err;
+        }
+      }
     };
 
     const decades = [
@@ -24,12 +35,22 @@ export async function GET(req: Request) {
       { start: "2015-01-01", end: "2024-12-31" }
     ];
 
-    const results = await Promise.all(decades.map(d => fetchDecade(d.start, d.end)));
+    // Sequential fetching to stay within rate limits more reliably
+    const results = [];
+    for (const d of decades) {
+      results.push(await fetchWithRetry(d.start, d.end));
+    }
 
-    const aggregatedData = new Map<string, { tempSum: number; precipSum: number; count: number; extremeHeat: number; extremeRain: number }>();
+    const aggregatedData = new Map<string, { 
+      tempSum: number; 
+      precipSum: number; 
+      count: number; 
+      extremeHeat: number; 
+      extremeRain: number 
+    }>();
 
     for (const data of results) {
-      if (!data.daily) continue;
+      if (!data?.daily) continue;
       const { time, temperature_2m_max, temperature_2m_min, precipitation_sum } = data.daily;
       
       for (let i = 0; i < time.length; i++) {
@@ -67,7 +88,10 @@ export async function GET(req: Request) {
 
     return NextResponse.json(finalData);
 
-  } catch (error) {
+  } catch (error: any) {
+    if (error.response?.status === 429) {
+      return NextResponse.json({ error: "API rate limit exceeded. Please try again soon." }, { status: 429 });
+    }
     console.error("Climate API Error:", error);
     return NextResponse.json({ error: "Failed to fetch climate data" }, { status: 500 });
   }
