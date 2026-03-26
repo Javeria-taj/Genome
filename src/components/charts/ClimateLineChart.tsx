@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,6 +13,7 @@ import {
   Filler,
   ChartOptions,
   Plugin,
+  Chart,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useTheme } from "@/context/ThemeContext";
@@ -69,6 +70,60 @@ export default function ClimateLineChart({ data }: Props) {
   const { isDark } = useTheme();
   const [selectedYearIndex, setSelectedYearIndex] = useState<number | null>(null);
 
+  const [selectedPoint, setSelectedPoint] = useState<{
+    year: number;
+    avgTemp: number;
+    totalPrecip: number;
+    extremeHeatDays: number;
+    x: number;
+    y: number;
+  } | null>(null);
+
+  const [lastFetched, setLastFetched] = useState<Date | null>(null);
+  const [timeAgo, setTimeAgo] = useState('');
+
+  useEffect(() => {
+    if (data.length > 0) {
+      setLastFetched(new Date());
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (!lastFetched) return;
+    const update = () => {
+      const secs = Math.floor((Date.now() - lastFetched.getTime()) / 1000);
+      if (secs < 60) setTimeAgo('just now');
+      else if (secs < 3600) setTimeAgo(`${Math.floor(secs / 60)} min ago`);
+      else setTimeAgo(`${Math.floor(secs / 3600)} hr ago`);
+    };
+    update();
+    const iv = setInterval(update, 60000);
+    return () => clearInterval(iv);
+  }, [lastFetched]);
+
+  const selectedYearPlugin: Plugin<"line"> = {
+    id: 'selectedYearLine',
+    afterDraw(chart) {
+      if (!selectedPoint) return;
+      const ctx = chart.ctx;
+      const meta = chart.getDatasetMeta(0);
+      const index = data.findIndex(d => d.year === selectedPoint.year);
+      if (index === -1) return;
+      const point = meta.data[index] as any;
+      if (!point) return;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(point.x, chart.chartArea.top);
+      ctx.lineTo(point.x, chart.chartArea.bottom);
+      ctx.strokeStyle = isDark ? 'rgba(237,232,220,0.25)' : 'rgba(15,14,13,0.18)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 3]);
+      ctx.stroke();
+      ctx.restore();
+    },
+  };
+
   const labels = data.map(d => d.year.toString());
   const temps = data.map(d => d.avgTemp);
   const precips = data.map(d => d.totalPrecip);
@@ -100,9 +155,9 @@ export default function ClimateLineChart({ data }: Props) {
         borderWidth: 1,
         titleColor: inkColor,
         bodyColor: dimColor,
-        titleFont: { family: "Space Mono", size: 11, weight: "bold" as any },
-        bodyFont: { family: "Space Mono", size: 10 },
-        padding: 10,
+        titleFont: { family: "Space Mono", size: 12, weight: "bold" as any },
+        bodyFont: { family: "Space Mono", size: 11 },
+        padding: 11,
         displayColors: true,
         callbacks: {
           title: (items) => "Year: " + items[0].label,
@@ -132,11 +187,25 @@ export default function ClimateLineChart({ data }: Props) {
         border: { color: blueColor, width: 1 },
       },
     },
-    onClick: (_event, elements) => {
-      if (elements.length > 0) {
-        setSelectedYearIndex(elements[0].index);
-      } else {
-        setSelectedYearIndex(null);
+    onClick: (event, elements, chart) => {
+      if (elements.length === 0) {
+        setSelectedPoint(null);
+        return;
+      }
+      const index = elements[0].index;
+      const d = data[index];
+      const meta = chart.getDatasetMeta(0);
+      const point = meta.data[index] as any;
+
+      if (point) {
+        setSelectedPoint({
+          year: d.year,
+          avgTemp: d.avgTemp,
+          totalPrecip: d.totalPrecip,
+          extremeHeatDays: d.extremeHeatDays,
+          x: point.x,
+          y: point.y,
+        });
       }
     },
   };
@@ -188,7 +257,7 @@ export default function ClimateLineChart({ data }: Props) {
         overflow: 'hidden',
       }}>
         <Line
-          plugins={[trendLinePlugin]}
+          plugins={[trendLinePlugin, selectedYearPlugin]}
           data={chartData}
           options={options as any}
           key={isDark ? "dark" : "light"}
@@ -204,12 +273,8 @@ export default function ClimateLineChart({ data }: Props) {
         gap: '20px',
         paddingTop: '10px',
         paddingBottom: '10px',
-        borderTopWidth: '1px',
-        borderTopStyle: 'solid',
-        borderTopColor: 'rgba(15,14,13,0.12)',
-        borderBottomWidth: '1px',
-        borderBottomStyle: 'solid',
-        borderBottomColor: 'rgba(15,14,13,0.12)',
+        borderTop: `1px solid ${isDark ? "rgba(237,232,220,0.12)" : "rgba(15,14,13,0.12)"}`,
+        borderBottom: `1px solid ${isDark ? "rgba(237,232,220,0.12)" : "rgba(15,14,13,0.12)"}`,
         marginBottom: '10px',
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -226,26 +291,100 @@ export default function ClimateLineChart({ data }: Props) {
         </div>
       </div>
 
-      {/* Persistent Info Box on Selection */}
-      {selectedYearIndex !== null && (
+      {/* Floating Card on Selection */}
+      {selectedPoint && (
+        <div
+          style={{
+            position: 'absolute',
+            left: Math.min(
+              Math.max(selectedPoint.x - 90, 8),
+              (wrapperRef.current?.offsetWidth || 400) - 188
+            ),
+            top: Math.max(selectedPoint.y - 130, 8),
+            width: '180px',
+            background: 'var(--paper)',
+            border: '1.5px solid var(--ink)',
+            padding: '10px 12px',
+            zIndex: 200, // Above everything
+            boxShadow: '4px 4px 0 rgba(15,14,13,0.12)',
+            animation: 'cardPopIn 0.18s ease-out both',
+            pointerEvents: 'auto',
+          }}
+        >
+          <button
+            onClick={() => setSelectedPoint(null)}
+            style={{
+              position: 'absolute', top: '6px', right: '8px',
+              background: 'none', border: 'none', cursor: 'pointer',
+              color: 'var(--dim)', fontFamily: 'Space Mono', fontSize: '14px',
+              lineHeight: 1,
+            }}
+          >×</button>
+
+          <div style={{
+            fontSize: '13px', fontWeight: '700',
+            fontFamily: 'Space Mono',
+            borderBottom: '1px solid rgba(15,14,13,0.12)',
+            paddingBottom: '6px', marginBottom: '8px',
+            color: 'var(--ink)',
+          }}>
+            {selectedPoint.year}
+          </div>
+
+          {[
+            { label: 'Avg Temp',   value: `${selectedPoint.avgTemp.toFixed(1)}°C`,      color: 'var(--accent)' },
+            { label: 'Precip',     value: `${Math.round(selectedPoint.totalPrecip)}mm`,  color: 'var(--blue)' },
+            { label: 'Heat days',  value: `${selectedPoint.extremeHeatDays}`,            color: 'var(--accent)' },
+          ].map(row => (
+            <div key={row.label} style={{
+              display: 'flex', justifyContent: 'space-between',
+              alignItems: 'baseline',
+              fontSize: '10.5px', fontFamily: 'Space Mono',
+              marginBottom: '5px',
+              borderBottom: '1px solid rgba(15,14,13,0.07)',
+              paddingBottom: '5px',
+            }}>
+              <span style={{ color: 'var(--dim)' }}>{row.label}</span>
+              <span style={{ color: row.color, fontWeight: '700' }}>{row.value}</span>
+            </div>
+          ))}
+
+          <div style={{
+            position: 'absolute',
+            bottom: '-8px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '1px',
+            height: '8px',
+            background: 'var(--ink)',
+            opacity: 0.3,
+          }}/>
+        </div>
+      )}
+
+      {/* Freshness Row */}
+      {lastFetched && (
         <div style={{
-          position: "absolute", top: "-6px", right: 0,
-          backgroundColor: isDark ? "rgba(212,103,42,0.1)" : "rgba(181,69,27,0.1)",
-          border: "1.5px solid var(--accent)",
-          padding: "8px 12px",
-          fontFamily: "Space Mono",
-          fontSize: "10px",
-          color: inkColor,
-          zIndex: 10,
-          pointerEvents: "none",
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          padding: '5px 0',
+          borderTop: '1px solid rgba(15,14,13,0.1)',
+          marginTop: '8px',
+          fontSize: '9.5px',
+          fontFamily: 'Space Mono',
+          color: 'var(--dim)',
         }}>
-          <b>{data[selectedYearIndex].year}</b>
-          {" | Temp: "}
-          <span style={{ color: "var(--accent)" }}>{data[selectedYearIndex].avgTemp.toFixed(1)}&deg;C</span>
-          {" | Precip: "}
-          <span style={{ color: "var(--blue)" }}>{data[selectedYearIndex].totalPrecip}mm</span>
-          {" | Heat: "}
-          {data[selectedYearIndex].extremeHeatDays}d
+          <span style={{
+            width: '6px', height: '6px',
+            borderRadius: '50%',
+            background: '#2ecc71',
+            flexShrink: 0,
+            animation: 'freshPulse 3s ease-in-out infinite',
+          }}/>
+          <span>Last fetched: <b style={{ color: 'var(--ink)' }}>{timeAgo}</b></span>
+          <span style={{ opacity: 0.4 }}>·</span>
+          <span>Source: Open-Meteo Archive</span>
         </div>
       )}
     </div>

@@ -35,15 +35,25 @@ interface MapPrimitiveProps {
   mapCenter?: [number, number];
   mapZoom?: number;
   onMapClick?: (lat: number, lng: number) => void;
+  isDark: boolean;
 }
 
 const TILE_URLS = {
   topo: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
   street: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
   satellite: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+  dark: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
 };
 
-export default function MapPrimitive({ layer, savedLocations, onDeleteSaved, mapCenter, mapZoom, onMapClick }: MapPrimitiveProps) {
+export default function MapPrimitive({ 
+  layer, 
+  savedLocations, 
+  onDeleteSaved, 
+  mapCenter, 
+  mapZoom, 
+  onMapClick,
+  isDark
+}: MapPrimitiveProps) {
   const { selectedCoords, setSelectedCoords, selectedLocation } = useCoordinateContext();
   const mapRef = useRef<L.Map>(null);
 
@@ -64,6 +74,8 @@ export default function MapPrimitive({ layer, savedLocations, onDeleteSaved, map
   const cityName = selectedLocation?.city || "";
   const countryName = selectedLocation?.country || "";
 
+  const tileUrl = (isDark && layer !== "satellite") ? TILE_URLS.dark : TILE_URLS[layer];
+
   return (
     <MapContainer
       center={[20, 0]}
@@ -73,7 +85,7 @@ export default function MapPrimitive({ layer, savedLocations, onDeleteSaved, map
       attributionControl={false}
       ref={mapRef as any}
     >
-      <TileLayer url={TILE_URLS[layer]} />
+      <TileLayer url={tileUrl} />
       <ZoomControl position="bottomright" />
       <MapClickHandler onMapClick={handleMapClick} />
 

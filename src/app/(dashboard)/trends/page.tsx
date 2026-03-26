@@ -66,20 +66,10 @@ export default function TrendsPage() {
                 <div style={{ fontSize: 8.5, color: "var(--dim)", marginBottom: 8 }}>
                   {locationLabel || "Selected location"} &nbsp;·&nbsp; 1985–2024
                 </div>
-                <div style={{ height: 180, position: "relative" }}>
+                <div>
                   <ClimateLineChart data={data} />
                 </div>
-                <div style={{ display: "flex", gap: 14, margin: "8px 0" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 8.5, color: "var(--dim)" }}>
-                    <div style={{ width: 14, height: 2, background: "var(--accent)" }} />Avg Temp
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 8.5, color: "var(--dim)" }}>
-                    <div style={{ width: 14, height: 1.5, background: "var(--blue)", opacity: .7 }} />Precip (dashed)
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 8.5, color: "var(--dim)" }}>
-                    <div style={{ width: 14, height: 1, background: "var(--accent)", opacity: .4 }} />Trend line
-                  </div>
-                </div>
+
                 {warmest && wettest && trend && (
                   <div style={{ fontSize: 8.5, color: "var(--dim)", borderTop: "var(--bh)", paddingTop: 6 }}>
                     Warmest Year: <b style={{ color: "var(--ink)" }}>{warmest.year} ({warmest.avgTemp.toFixed(1)}°C)</b>
@@ -91,7 +81,7 @@ export default function TrendsPage() {
                   <div className="sc"><span className="sv">{warmest?.avgTemp.toFixed(1)}°</span><span className="sl">Peak Avg</span></div>
                   <div className="sc"><span className="sv" style={{ color: "var(--accent)" }}>+{trend}°</span><span className="sl">Δ 40yr</span></div>
                   <div className="sc"><span className="sv">{wettest ? Math.round(wettest.totalPrecip).toLocaleString() : "—"}</span><span className="sl">Peak mm</span></div>
-                  <div className="sc"><span className="sv">{data.reduce((s,d) => s + d.extremeHeatDays, 0)}</span><span className="sl">Heat Days</span></div>
+                  <div className="sc"><span className="sv">{data.reduce((s, d) => s + d.extremeHeatDays, 0)}</span><span className="sl">Heat Days</span></div>
                 </div>
               </>
             ) : null}

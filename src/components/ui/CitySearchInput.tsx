@@ -3,6 +3,11 @@
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 
+// ─── Module-level geocoding cache (1h TTL) ───────────────────────────────────
+// Prevents re-fetching for the same search query typed by the user.
+const GEO_CACHE = new Map<string, { data: unknown[]; ts: number }>();
+const GEO_CACHE_TTL = 60 * 60 * 1000; // 1 hour
+
 interface Result {
   name: string;
   country: string;
@@ -28,18 +33,27 @@ export default function CitySearchInput({ onSelect, placeholder = "Search city..
   // Debounced search
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    if (query.length < 2) { setResults([]); setOpen(false); return; }
+    if (query.length < 3) { setResults([]); setOpen(false); return; }
     debounceRef.current = setTimeout(async () => {
       setLoading(true);
       try {
+        const q = query.trim().toLowerCase();
+        const cached = GEO_CACHE.get(q);
+        if (cached && Date.now() - cached.ts < GEO_CACHE_TTL) {
+          setResults(cached.data as Result[]);
+          setOpen(true);
+          return;
+        }
         const res = await axios.get(
           `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&format=json`
         );
-        setResults(res.data?.results || []);
+        const results = res.data?.results || [];
+        GEO_CACHE.set(q, { data: results, ts: Date.now() });
+        setResults(results);
         setOpen(true);
       } catch { setResults([]); }
       finally { setLoading(false); }
-    }, 400);
+    }, 700);
   }, [query]);
 
   // Close on outside click

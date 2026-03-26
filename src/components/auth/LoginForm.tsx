@@ -31,12 +31,20 @@ export default function LoginForm() {
     return () => timers.forEach(clearTimeout);
   }, []);
 
+  const errorMessages: Record<string, string> = {
+    'EmailNotFound':    'No account found with this email address.',
+    'WrongPassword':    'Incorrect password. Check your spelling and try again.',
+    'CredentialsSignin':'Incorrect email or password.',
+    'TooManyAttempts':  'Too many failed attempts. Please wait 30 seconds.',
+    'default':          'Authentication failed. Please try again.',
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (lockedUntil && Date.now() < lockedUntil) {
-      const secs = Math.ceil((lockedUntil - Date.now()) / 1000);
-      setErrorMsg(`Too many attempts. Try again in ${secs}s.`);
+      const msg = errorMessages['TooManyAttempts'];
+      setErrorMsg(msg);
       setStatus("error");
       return;
     }
@@ -69,15 +77,12 @@ export default function LoginForm() {
       const newCount = errorCount + 1;
       setErrorCount(newCount);
 
-      if (result?.error === "CredentialsSignin" || result?.status === 401) {
-        if (newCount >= 5) {
-          setLockedUntil(Date.now() + 30000);
-          setErrorMsg("Too many failed attempts. Please wait 30 seconds.");
-        } else {
-          setErrorMsg(`Incorrect email or password. ${5 - newCount} attempt${5 - newCount !== 1 ? "s" : ""} remaining.`);
-        }
+      if (newCount >= 5) {
+        setLockedUntil(Date.now() + 30000);
+        setErrorMsg(errorMessages['TooManyAttempts']);
       } else {
-        setErrorMsg("Authentication failed. Please try again.");
+        const msg = errorMessages[result?.error ?? 'default'] ?? errorMessages['default'];
+        setErrorMsg(msg);
       }
     }
   };
@@ -181,16 +186,79 @@ export default function LoginForm() {
             maxWidth: "400px",
             boxShadow: "5px 5px 0 rgba(15,14,13,0.15)",
             animation: "errorFadeIn 0.25s ease-out",
+            position: "relative",
           }}>
+            <button
+              onClick={() => { setForgotOpen(false); setForgotStatus("idle"); setForgotEmail(""); }}
+              style={{
+                position: "absolute",
+                top: "12px",
+                right: "12px",
+                background: "none",
+                border: "none",
+                color: "#ff4500", // Deep orange (OrangeRed)
+                fontSize: "20px",
+                fontWeight: "bold",
+                cursor: "pointer",
+                padding: "4px",
+                lineHeight: 1,
+                transition: "transform 0.2s",
+              }}
+              className="modal-close-btn"
+              title="Close"
+            >
+              ×
+            </button>
             <div style={{ fontWeight: 700, fontSize: "13px", marginBottom: "6px" }}>Reset password</div>
             <div style={{ fontSize: "10.5px", color: "var(--dim)", marginBottom: "18px", lineHeight: 1.7 }}>
               Enter your email address. If an account exists, you'll receive a reset link within a few minutes.
             </div>
 
             {forgotStatus === "sent" ? (
-              <div style={{ fontSize: "11px", borderLeft: "3px solid #2ecc71", padding: "8px 12px",
-                            background: "rgba(46,204,113,0.07)", color: "#1a7a40" }}>
+              <div style={{
+                fontSize: "11px",
+                borderLeft: "3px solid #2ecc71",
+                padding: "12px 14px",
+                background: "rgba(46,204,113,0.07)",
+                color: "#1a7a40",
+                position: "relative",
+                animation: "errorFadeIn 0.3s ease-out",
+              }}>
+                <div
+                  onClick={() => { setForgotOpen(false); setForgotStatus("idle"); setForgotEmail(""); }}
+                  style={{
+                    position: "absolute",
+                    top: "6px",
+                    right: "8px",
+                    cursor: "pointer",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    opacity: 0.7,
+                  }}
+                  title="Dismiss"
+                >
+                  ×
+                </div>
                 If that email is registered, a reset link has been sent. Check your inbox.
+                <div style={{ marginTop: "20px" }}>
+                  <button
+                    onClick={() => { setForgotOpen(false); setForgotStatus("idle"); setForgotEmail(""); }}
+                    style={{
+                      width: "100%",
+                      background: "var(--ink)",
+                      color: "var(--paper)",
+                      border: "none",
+                      fontFamily: "Space Mono",
+                      fontSize: "10.5px",
+                      textTransform: "uppercase",
+                      letterSpacing: ".1em",
+                      padding: "10px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Back to Login
+                  </button>
+                </div>
               </div>
             ) : (
               <>

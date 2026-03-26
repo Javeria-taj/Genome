@@ -57,44 +57,40 @@ export default function ResetPasswordPage({ params }: { params: { token: string 
           <span className="right-top-label">Reset your password</span>
         </div>
 
-        {status === "success" ? (
-          <div style={{ textAlign: "center", padding: "40px 0" }}>
-            <div style={{ fontSize: "28px", marginBottom: "12px", color: "#2ecc71" }}>✓</div>
-            <div style={{ fontSize: "13px", fontFamily: "Space Mono" }}>
-              Password updated. Redirecting to login...
-            </div>
-          </div>
-        ) : (
-          <form onSubmit={handleReset}>
-            <div className="form-section-label">New Credentials</div>
-            <ErrorBanner message={msg} onDismiss={() => { setStatus("idle"); setMsg(""); }} />
-            
-            <Field label="New password">
-              <input
-                type="password"
-                className="field-input"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••••••"
-              />
-            </Field>
+        <form onSubmit={handleReset}>
+          <div className="form-section-label">New Credentials</div>
+          <ErrorBanner message={msg} onDismiss={() => { setStatus("idle"); setMsg(""); }} />
+          
+          <Field label="New password">
+            <input
+              type="password"
+              className="field-input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••••••"
+            />
+          </Field>
 
-            <Field label="Confirm password">
-              <input
-                type="password"
-                className="field-input"
-                value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
-                placeholder="••••••••••••"
-              />
-            </Field>
+          <Field label="Confirm password">
+            <input
+              type="password"
+              className="field-input"
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+              placeholder="••••••••••••"
+            />
+          </Field>
 
-            <AuthButton status={status}>Set new password</AuthButton>
-          </form>
-        )}
+          <AuthButton 
+            status={status}
+            successLabel="Password Updated — Redirecting to Login"
+          >
+            Set new password
+          </AuthButton>
+        </form>
 
         <div className="form-footer">
-          <span>Genome v3.3 &middot; Next.js + MongoDB</span>
+          <span>Genome v3.4 &middot; Next.js + MongoDB</span>
         </div>
       </div>
     </div>

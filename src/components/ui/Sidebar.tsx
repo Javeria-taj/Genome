@@ -29,6 +29,19 @@ export default function Sidebar() {
   const { data: session } = useSession();
   const [collapsed, setCollapsed] = useState(false);
   const [savedPins, setSavedPins] = useState<any[]>([]);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Listen for hamburger toggle event from Topbar
+  useEffect(() => {
+    const handler = () => setMobileOpen(prev => !prev);
+    window.addEventListener('sidebar-toggle', handler);
+    return () => window.removeEventListener('sidebar-toggle', handler);
+  }, []);
+
+  // Close drawer on navigation
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     const fetchPins = async () => {
@@ -38,13 +51,18 @@ export default function Sidebar() {
       } catch { /* unauthenticated or no pins */ }
     };
     fetchPins();
-    // Refresh every 30s to catch newly saved pins
     const id = setInterval(fetchPins, 30000);
     return () => clearInterval(id);
   }, []);
 
   return (
-    <div className={`sb no-print${collapsed ? " collapsed" : ""}`} id="sb">
+    <>
+    {/* Mobile backdrop */}
+    <div
+      className={`sb-backdrop${mobileOpen ? " visible" : ""}`}
+      onClick={() => setMobileOpen(false)}
+    />
+    <div className={`sb no-print${collapsed ? " collapsed" : ""}${mobileOpen ? " mobile-open" : ""}`} id="sb">
       {/* Toggle */}
       <div className="sb-toggle" onClick={() => setCollapsed(c => !c)}>
         <div className="toggle-icon">
@@ -117,5 +135,6 @@ export default function Sidebar() {
         </div>
       </div>
     </div>
+    </>
   );
 }

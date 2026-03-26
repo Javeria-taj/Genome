@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import { useCoordinateContext } from "@/context/CoordinateContext";
 import { useTheme } from "@/context/ThemeContext";
+import { useSystemHealth } from "@/hooks/useSystemHealth";
 
 export default function Topbar() {
   const { selectedCoords, selectedLocation } = useCoordinateContext();
   const { isDark, toggle } = useTheme();
+  const health = useSystemHealth();
   const [utcClock, setUtcClock] = useState("");
   const [flash, setFlash] = useState(false);
 
@@ -58,6 +60,17 @@ export default function Topbar() {
         Genome
       </div>
 
+      {/* Mobile hamburger — visible only below 768px */}
+      <button
+        className="hamburger-btn mobile-only"
+        onClick={() => window.dispatchEvent(new Event('sidebar-toggle'))}
+        title="Toggle navigation"
+      >
+        <div className="hamburger-icon">
+          <span /><span /><span />
+        </div>
+      </button>
+
       {/* Coordinates / Location display */}
       <style>{`
         @keyframes flashGreen {
@@ -96,9 +109,17 @@ export default function Topbar() {
         </button>
 
         {/* API status */}
-        <button className="tb-btn" style={{ cursor: "default" }}>
-          <div className="status-pip" />
-          Open-Meteo Live
+        <button className="tb-btn" style={{ cursor: "default", display: "flex", gap: "6px" }} title="System Health Monitoring">
+          <div className="status-pip" style={{
+            background: health.status === 'operational' ? '#2ecc71' : 
+                        health.status === 'unstable' ? '#e74c3c' : '#f1c40f',
+            boxShadow: health.status === 'operational' ? '0 0 6px #2ecc71' : 'none',
+            animation: health.status === 'checking' ? 'pulse 1s infinite' : 'none',
+          }} />
+          <span style={{ fontSize: '10px' }}>
+            {health.status === 'operational' ? `System: Healthy (${health.latency})` : 
+             health.status === 'unstable' ? 'System: Unstable' : 'Checking Health...'}
+          </span>
         </button>
 
         {/* UTC Clock */}

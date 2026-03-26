@@ -33,8 +33,9 @@ export default function LocationInfoCard() {
   if (locationLoading) {
     return (
       <div style={{
-        height: 72, background: "var(--paper)", border: "1.5px solid var(--ink)",
-        borderTop: "none", display: "flex", alignItems: "center", padding: "0 16px",
+        height: 72, background: "var(--paper)",
+        borderLeft: "1.5px solid var(--ink)", borderRight: "1.5px solid var(--ink)", borderBottom: "1.5px solid var(--ink)", borderTop: "none",
+        display: "flex", alignItems: "center", padding: "0 16px",
         overflow: "hidden", position: "relative",
       }}>
         <div className="skeleton-shimmer" style={{

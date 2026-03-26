@@ -47,11 +47,11 @@ export default function DashboardPage() {
         <div style={{ fontSize: 10, color: "var(--dim)", letterSpacing: "0.06em", fontFamily: "var(--mono)" }}>
           {selectedLocation
             ? selectedLocation.city + ", " + selectedLocation.country + "  ·  " +
-              Math.abs(selectedLocation.lat).toFixed(4) + "°" + (selectedLocation.lat >= 0 ? "N" : "S") + ", " +
-              Math.abs(selectedLocation.lng).toFixed(4) + "°" + (selectedLocation.lng >= 0 ? "E" : "W") + "  ·  1985–2024"
+            Math.abs(selectedLocation.lat).toFixed(4) + "°" + (selectedLocation.lat >= 0 ? "N" : "S") + ", " +
+            Math.abs(selectedLocation.lng).toFixed(4) + "°" + (selectedLocation.lng >= 0 ? "E" : "W") + "  ·  1985–2024"
             : selectedCoords
-            ? selectedCoords.lat.toFixed(4) + "°N, " + selectedCoords.lng.toFixed(4) + "°E  ·  1985–2024"
-            : "1985–2024"}
+              ? selectedCoords.lat.toFixed(4) + "°N, " + selectedCoords.lng.toFixed(4) + "°E  ·  1985–2024"
+              : "1985–2024"}
         </div>
       </div>
 
@@ -138,10 +138,37 @@ export default function DashboardPage() {
                 </div>
                 <div className="stat-row">
                   <div className="sc" style={{ position: "relative", overflow: "hidden" }}>
-                    <svg viewBox="0 -5 100 30" style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: "40px", opacity: 0.15, pointerEvents: "none" }} preserveAspectRatio="none">
-                      <path d={heatPath} fill="none" stroke="var(--red)" strokeWidth="2" className="sparkline-path" />
+                    {/* Heat wave animation */}
+                    <style>{`
+                      @keyframes heatWave {
+                        0%   { d: path("M0 15 Q12 8 25 15 Q37 22 50 15 Q62 8 75 15 Q87 22 100 15"); }
+                        50%  { d: path("M0 15 Q12 22 25 15 Q37 8 50 15 Q62 22 75 15 Q87 8 100 15"); }
+                        100% { d: path("M0 15 Q12 8 25 15 Q37 22 50 15 Q62 8 75 15 Q87 22 100 15"); }
+                      }
+                      @keyframes heatPulse {
+                        0%, 100% { opacity: 0.18; transform: scaleY(1); }
+                        50%       { opacity: 0.32; transform: scaleY(1.12); }
+                      }
+                      @keyframes heatGlow {
+                        0%, 100% { text-shadow: 0 0 0px rgba(249,115,22,0); }
+                        50%       { text-shadow: 0 0 12px rgba(249,115,22,0.55); }
+                      }
+                      .heat-num { animation: heatGlow 2s ease-in-out infinite; }
+                    `}</style>
+                    {/* Animated heat waves behind the card */}
+                    <svg viewBox="0 0 100 30" preserveAspectRatio="none"
+                      style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: "100%", opacity: 1, pointerEvents: "none" }}>
+                      <path d="M0 22 Q12 14 25 22 Q37 30 50 22 Q62 14 75 22 Q87 30 100 22"
+                        fill="none" stroke="#f97316" strokeWidth="1.5" strokeLinecap="round"
+                        style={{ animation: "heatPulse 2s ease-in-out infinite", transformOrigin: "50% 100%" }} />
+                      <path d="M0 26 Q12 18 25 26 Q37 34 50 26 Q62 18 75 26 Q87 34 100 26"
+                        fill="none" stroke="#f97316" strokeWidth="1" strokeLinecap="round"
+                        style={{ animation: "heatPulse 2.4s ease-in-out infinite 0.4s", transformOrigin: "50% 100%", opacity: 0.55 }} />
+                      {/* Radial heat glow at bottom */}
+                      <ellipse cx="50" cy="30" rx="40" ry="10" fill="rgba(249,115,22,0.08)"
+                        style={{ animation: "heatPulse 2s ease-in-out infinite" }} />
                     </svg>
-                    <span className="sv" style={{ color: "var(--red)", position: "relative" }}>
+                    <span className="sv heat-num" style={{ color: "#f97316", position: "relative" }}>
                       {data.reduce((s, d) => s + d.extremeHeatDays, 0)}
                     </span>
                     <span className="sl" style={{ position: "relative" }}>Heat Days</span>

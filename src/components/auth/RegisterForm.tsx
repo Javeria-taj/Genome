@@ -98,7 +98,12 @@ export default function RegisterForm() {
           <input {...register("confirmPassword")} className="field-input" type="password" placeholder="••••••••••••" />
         </Field>
 
-        <AuthButton status={status}>Create Account &amp; Enter Dashboard</AuthButton>
+        <AuthButton
+          status={status}
+          successLabel="Account Created — Entering Dashboard"
+        >
+          Create Account &amp; Enter Dashboard
+        </AuthButton>
         
         <div style={{ marginTop: "12px", display: "flex", justifyContent: "center" }}>
           <Link href="/login" style={{ fontSize: "10px", color: "var(--ink)", textDecoration: "underline" }}>

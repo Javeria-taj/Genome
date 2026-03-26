@@ -6,6 +6,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import dynamic from "next/dynamic";
 import LocationInfoCard from "./LocationInfoCard";
+import { useTheme } from "@/context/ThemeContext";
 
 const MapPrimitive = dynamic(() => import("./MapPrimitive"), { ssr: false });
 
@@ -51,15 +52,30 @@ const HighlightMatch = ({ text, query }: { text: string; query: string }) => {
   );
 };
 
+// ─── Module-level AQI cache (1h TTL) ────────────────────────────────────────
+// Keyed by lat/lng rounded to 2dp (~1km precision). Prevents repeat AQI calls
+// when the user clicks the same area multiple times or re-selects a city.
+const AQI_CACHE = new Map<string, { result: Awaited<ReturnType<typeof _fetchAQIRaw>>; ts: number }>();
+const AQI_CACHE_TTL = 60 * 60 * 1000; // 1 hour
+
+async function _fetchAQIRaw(lat: number, lng: number) {
+  const res = await fetch(
+    "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=" + lat + "&longitude=" + lng + "&hourly=european_aqi&timezone=auto&forecast_days=1"
+  );
+  const data = await res.json();
+  const values: number[] = data.hourly?.european_aqi || [];
+  const aqi = values.filter((v) => v !== null).slice(-1)[0] ?? 0;
+  return { aqi, ...getAQIInfo(aqi), timezone: data.timezone || "UTC" };
+}
+
 const fetchAQI = async (lat: number, lng: number) => {
+  const key = `${lat.toFixed(2)},${lng.toFixed(2)}`;
+  const cached = AQI_CACHE.get(key);
+  if (cached && Date.now() - cached.ts < AQI_CACHE_TTL) return cached.result;
   try {
-    const res = await fetch(
-      "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=" + lat + "&longitude=" + lng + "&hourly=european_aqi&timezone=auto&forecast_days=1"
-    );
-    const data = await res.json();
-    const values: number[] = data.hourly?.european_aqi || [];
-    const aqi = values.filter((v) => v !== null).slice(-1)[0] ?? 0;
-    return { aqi, ...getAQIInfo(aqi), timezone: data.timezone || "UTC" };
+    const result = await _fetchAQIRaw(lat, lng);
+    AQI_CACHE.set(key, { result, ts: Date.now() });
+    return result;
   } catch {
     return { aqi: null, label: "Unknown", color: "var(--dim)", timezone: "UTC" };
   }
@@ -117,7 +133,7 @@ export default function WorldMap({ onPinsChange }: { onPinsChange?: (count: numb
   const [focusedIdx, setFocusedIdx] = useState(-1);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const suggestionsRef = useRef<HTMLDivElement>(null);
-  
+
   const [pulsePin, setPulsePin] = useState(false);
 
   useEffect(() => { fetchPins(); }, []);
@@ -187,7 +203,7 @@ export default function WorldMap({ onPinsChange }: { onPinsChange?: (count: numb
     );
     const data = await res.json();
     return data.features
-      .filter((f: any) => 
+      .filter((f: any) =>
         ['city', 'town', 'village', 'hamlet'].includes(f.properties?.type || "") ||
         f.properties?.osm_value === 'city'
       )
@@ -289,6 +305,8 @@ export default function WorldMap({ onPinsChange }: { onPinsChange?: (count: numb
     }
   };
 
+  const { isDark } = useTheme();
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 0, width: "100%" }}>
       {/* 3D Perspective Map Layer */}
@@ -301,6 +319,7 @@ export default function WorldMap({ onPinsChange }: { onPinsChange?: (count: numb
               onDeleteSaved={handleDelete}
               mapCenter={mapCenter}
               onMapClick={handleMapClick}
+              isDark={isDark}
             />
           </div>
         </div>
@@ -361,45 +380,45 @@ export default function WorldMap({ onPinsChange }: { onPinsChange?: (count: numb
                 </div>
               ) : (
                 suggestions.map((s, i) => {
-                const addr = s.address || {};
-                const city = getSuggestionCity(s);
-                const country = addr.country || "";
-                const countryCode = (addr.country_code || "").toUpperCase();
-                const isFocused = i === focusedIdx;
-                return (
-                  <div
-                    key={s.place_id}
-                    onMouseDown={() => handleSelectSuggestion(s)}
-                    style={{
-                      padding: "8px 12px", cursor: "pointer",
-                      borderBottom: i < suggestions.length - 1 ? "1px solid rgba(15,14,13,0.1)" : "none",
-                      transition: "background 0.1s",
-                      display: "flex", justifyContent: "space-between", alignItems: "baseline",
-                      background: isFocused ? "var(--paper2)" : "transparent",
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = "var(--paper2)")}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = isFocused ? "var(--paper2)" : "transparent")}
-                  >
-                    <div>
-                      <div style={{ fontSize: "11px", color: "var(--ink)", fontFamily: "Space Mono" }}>
-                        <HighlightMatch text={city} query={query} />
+                  const addr = s.address || {};
+                  const city = getSuggestionCity(s);
+                  const country = addr.country || "";
+                  const countryCode = (addr.country_code || "").toUpperCase();
+                  const isFocused = i === focusedIdx;
+                  return (
+                    <div
+                      key={s.place_id}
+                      onMouseDown={() => handleSelectSuggestion(s)}
+                      style={{
+                        padding: "8px 12px", cursor: "pointer",
+                        borderBottom: i < suggestions.length - 1 ? "1px solid rgba(15,14,13,0.1)" : "none",
+                        transition: "background 0.1s",
+                        display: "flex", justifyContent: "space-between", alignItems: "baseline",
+                        background: isFocused ? "var(--paper2)" : "transparent",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "var(--paper2)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = isFocused ? "var(--paper2)" : "transparent")}
+                    >
+                      <div>
+                        <div style={{ fontSize: "11px", color: "var(--ink)", fontFamily: "Space Mono" }}>
+                          <HighlightMatch text={city} query={query} />
+                        </div>
+                        <div style={{ fontSize: "9.5px", color: "var(--dim)", fontFamily: "Space Mono", marginTop: "1px" }}>
+                          {country}
+                        </div>
                       </div>
-                      <div style={{ fontSize: "9.5px", color: "var(--dim)", fontFamily: "Space Mono", marginTop: "1px" }}>
-                        {country}
-                      </div>
+                      {countryCode && (
+                        <div style={{
+                          fontSize: "8.5px", color: "var(--dim)", fontFamily: "Space Mono",
+                          border: "1px solid var(--dim)", padding: "1px 5px", letterSpacing: "0.06em",
+                          flexShrink: 0, marginLeft: 8,
+                        }}>
+                          {countryCode}
+                        </div>
+                      )}
                     </div>
-                    {countryCode && (
-                      <div style={{
-                        fontSize: "8.5px", color: "var(--dim)", fontFamily: "Space Mono",
-                        border: "1px solid var(--dim)", padding: "1px 5px", letterSpacing: "0.06em",
-                        flexShrink: 0, marginLeft: 8,
-                      }}>
-                        {countryCode}
-                      </div>
-                    )}
-                  </div>
-                );
-              }))}
+                  );
+                }))}
             </div>
           )}
         </div>

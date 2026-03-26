@@ -47,9 +47,9 @@ export default function ComparisonChart({ dataA, dataB, labelA, labelB }: Props)
         borderWidth: 1,
         titleColor: inkColor,
         bodyColor: dimColor,
-        titleFont: { family: "'Space Mono', monospace", size: 11, weight: "bold" as any },
-        bodyFont: { family: "'Space Mono', monospace", size: 10 },
-        padding: 10,
+        titleFont: { family: "Space Mono", size: 12, weight: "bold" as any },
+        bodyFont: { family: "Space Mono", size: 11 },
+        padding: 11,
         cornerRadius: 0,
         displayColors: true,
         callbacks: {
@@ -64,12 +64,12 @@ export default function ComparisonChart({ dataA, dataB, labelA, labelB }: Props)
     scales: {
       x: {
         grid: { color: gridColor, lineWidth: 0.5 },
-        ticks: { font: { family: "'Space Mono', monospace", size: 10 }, color: dimColor, maxRotation: 0 },
+        ticks: { font: { family: "Space Mono", size: 11 }, color: dimColor, maxRotation: 0 },
         border: { color: inkColor, width: 1.2 },
       },
       y: {
         grid: { color: gridColor, lineWidth: 0.5 },
-        ticks: { font: { family: "'Space Mono', monospace", size: 10 }, color: dimColor, callback: v => v + "\u00b0" },
+        ticks: { font: { family: "Space Mono", size: 11 }, color: dimColor, callback: v => v + "\u00b0" },
         border: { color: inkColor, width: 1.2 },
       },
     },

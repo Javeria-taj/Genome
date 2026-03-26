@@ -21,7 +21,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const user = await User.findOne({ email: credentials.email }).exec();
         if (!user) {
-          return null;
+          throw new Error("EmailNotFound");
         }
 
         const passwordsMatch = await bcrypt.compare(
@@ -29,15 +29,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           user.password!
         );
 
-        if (passwordsMatch) {
-          return {
-            id: user._id.toString(),
-            email: user.email,
-            name: user.name,
-          };
+        if (!passwordsMatch) {
+          throw new Error("WrongPassword");
         }
 
-        return null;
+        return {
+          id: user._id.toString(),
+          email: user.email,
+          name: user.name,
+        };
       },
     }),
   ],
