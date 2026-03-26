@@ -114,18 +114,20 @@ export default function WorldMap({ onPinsChange }: { onPinsChange?: (count: numb
   const [layer, setLayer] = useState<"topo" | "street" | "satellite">("topo");
   const {
     selectedCoords, setSelectedCoords,
-    setLocationLabel,
+    locationLabel, setLocationLabel,
     selectedLocation, setSelectedLocation,
     setLocationLoading,
   } = useCoordinateContext();
 
   const [savedLocations, setSavedLocations] = useState<any[]>([]);
   const [isSaving, setIsSaving] = useState(false);
-  const [mapCenter, setMapCenter] = useState<[number, number] | undefined>(undefined);
+  const [mapCenter, setMapCenter] = useState<[number, number] | undefined>(
+    selectedCoords ? [selectedCoords.lat, selectedCoords.lng] : undefined
+  );
   const mapWrapperRef = useRef<HTMLDivElement>(null);
 
   // ── Search autocomplete state ──
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(locationLabel || "");
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [noResults, setNoResults] = useState(false);
@@ -137,6 +139,12 @@ export default function WorldMap({ onPinsChange }: { onPinsChange?: (count: numb
   const [pulsePin, setPulsePin] = useState(false);
 
   useEffect(() => { fetchPins(); }, []);
+
+  useEffect(() => {
+    if (locationLabel) {
+      setQuery(locationLabel);
+    }
+  }, [locationLabel]);
 
   const fetchPins = async () => {
     try {

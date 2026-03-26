@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useCoordinateContext } from "@/context/CoordinateContext";
 import { useClimateData } from "@/hooks/useClimateData";
 import SkeletonLoader from "@/components/ui/SkeletonLoader";
@@ -195,9 +196,9 @@ export default function DashboardPage() {
                     { label: "Decade Delta →", href: "/delta" },
                     { label: "Weather Extremes →", href: "/extremes" },
                   ].map(link => (
-                    <a key={link.href} href={link.href} style={{ display: "block", fontSize: 9, color: "var(--blue)", textDecoration: "none", padding: "4px 0", borderBottom: "var(--bh)" }}>
+                    <Link key={link.href} href={link.href} style={{ display: "block", fontSize: 9, color: "var(--blue)", textDecoration: "none", padding: "4px 0", borderBottom: "var(--bh)" }}>
                       {link.label}
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </>

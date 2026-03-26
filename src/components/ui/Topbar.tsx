@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useCoordinateContext } from "@/context/CoordinateContext";
 import { useTheme } from "@/context/ThemeContext";
 import { useSystemHealth } from "@/hooks/useSystemHealth";
@@ -36,7 +37,7 @@ export default function Topbar() {
   return (
     <div className="tb no-print">
       {/* Logo */}
-      <div className="tb-logo" onClick={() => window.location.href = "/dashboard"}>
+      <Link href="/dashboard" className="tb-logo" style={{ textDecoration: "none", color: "inherit" }}>
         <svg width="18" height="18" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
           <defs>
             <radialGradient id="fg" cx="35%" cy="32%" r="60%">
@@ -58,7 +59,7 @@ export default function Topbar() {
           <ellipse cx="16" cy="16" rx="13.5" ry="13" fill="none" stroke="rgba(212,168,60,0.9)" strokeWidth="1.8" strokeDasharray="5 3" transform="rotate(-20,16,16)" clipPath="url(#fc)"/>
         </svg>
         Genome
-      </div>
+      </Link>
 
       {/* Mobile hamburger — visible only below 768px */}
       <button

@@ -63,6 +63,12 @@ export default function MapPrimitive({
     }
   }, [mapCenter, mapZoom]);
 
+  useEffect(() => {
+    if (mapRef.current && selectedCoords) {
+      mapRef.current.flyTo([selectedCoords.lat, selectedCoords.lng], mapZoom || 10, { duration: 1.2 });
+    }
+  }, [selectedCoords, mapZoom]);
+
   const handleMapClick = (lat: number, lng: number) => {
     if (onMapClick) {
       onMapClick(lat, lng);
@@ -78,8 +84,8 @@ export default function MapPrimitive({
 
   return (
     <MapContainer
-      center={[20, 0]}
-      zoom={2}
+      center={selectedCoords ? [selectedCoords.lat, selectedCoords.lng] : [20, 0]}
+      zoom={selectedCoords ? 10 : 2}
       style={{ width: "100%", height: "100%", zIndex: 0 }}
       zoomControl={false}
       attributionControl={false}
