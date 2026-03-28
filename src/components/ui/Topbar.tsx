@@ -153,7 +153,7 @@ export default function Topbar() {
         </button>
 
         {/* UTC Clock */}
-        <button className="tb-btn" style={{ cursor: "default", fontVariantNumeric: "tabular-nums" }}>
+        <button className="tb-btn" style={{ cursor: "default", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>
           {utcClock || "UTC --:--:--"}
         </button>
       </div>

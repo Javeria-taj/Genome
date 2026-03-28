@@ -54,9 +54,7 @@ export default function LocationInfoCard() {
   const tz = selectedLocation.timezone.replace(/_/g, " ");
 
   return (
-    <div className="fade-in" style={{
-      display: "grid",
-      gridTemplateColumns: "1.5fr 2fr 1fr 1.5fr",
+    <div className="fade-in location-info-card" style={{
       borderBottom: "1.5px solid var(--ink)",
       borderTop: "none",
       background: "var(--paper)",

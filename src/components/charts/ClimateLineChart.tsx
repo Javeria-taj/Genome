@@ -270,6 +270,7 @@ export default function ClimateLineChart({ data }: Props) {
         position: 'relative',
         zIndex: 2,
         display: 'flex',
+        flexWrap: 'wrap',
         gap: '20px',
         paddingTop: '10px',
         paddingBottom: '10px',

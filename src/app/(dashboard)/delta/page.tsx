@@ -80,7 +80,7 @@ export default function DeltaPage() {
             ) : data ? (
               <>
                 {/* Decade selectors */}
-                <div style={{ display: "flex", gap: 6, alignItems: "center", marginBottom: 12 }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginBottom: 12 }}>
                   <select
                     className="d-sel"
                     value={decadeA}
@@ -112,9 +112,9 @@ export default function DeltaPage() {
                 <HeatGauge delta={currentDelta} previousDelta={prevDelta} />
 
                 {/* Meta */}
-                <div style={{ fontSize: 11, color: "var(--dim)", marginTop: 12, borderTop: "var(--bh)", paddingTop: 10, fontFamily: "var(--mono)" }}>
-                  Precipitation Delta: <b style={{ color: "var(--ink)" }}>{precipDelta}mm</b> &nbsp;·&nbsp;
-                  Extreme Heat Days Δ: <b style={{ color: "var(--red)" }}>{extremeDelta !== null ? (extremeDelta > 0 ? "+" : "") + extremeDelta : "—"}</b>
+                 <div style={{ fontSize: 11, color: "var(--dim)", marginTop: 12, borderTop: "var(--bh)", paddingTop: 10, fontFamily: "var(--mono)", display: "flex", flexWrap: "wrap", gap: "8px 12px" }}>
+                  <span>Precipitation Delta: <b style={{ color: "var(--ink)" }}>{precipDelta}mm</b></span>
+                  <span>Extreme Heat Days Δ: <b style={{ color: "var(--red)" }}>{extremeDelta !== null ? (extremeDelta > 0 ? "+" : "") + extremeDelta : "—"}</b></span>
                 </div>
                 <div style={{ fontSize: 11, color: "var(--dim)", borderTop: "var(--bh)", paddingTop: 10, marginTop: 12, fontFamily: "var(--mono)" }}>
                   Historical shift relative to {DECADE_OPTIONS[decadeA].label} baseline

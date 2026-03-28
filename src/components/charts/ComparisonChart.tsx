@@ -123,7 +123,7 @@ export default function ComparisonChart({ dataA, dataB, labelA, labelB }: Props)
     <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: "10px" }}>
       {/* Custom Legend */}
       <div style={{
-        display: "flex", gap: "20px", alignItems: "center",
+        display: "flex", flexWrap: "wrap", gap: "20px", alignItems: "center",
         padding: "8px 0", borderBottom: "1px solid " + inkColor + "20",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>

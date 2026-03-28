@@ -490,6 +490,11 @@ textarea {
   letter-spacing: .07em;
 }
 
+.location-info-card {
+  display: grid;
+  grid-template-columns: 1.5fr 2fr 1fr 1.5fr;
+}
+
 /* ─── MAP ────────────────────────────────────────────────── */
 .map-wrap {
   height: 480px;
@@ -763,6 +768,12 @@ textarea {
   text-align: center;
 }
 
+.compare-search-grid,
+.compare-selection-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
 /* ─── COMPARE ────────────────────────────────────────────── */
 .city-inp {
   width: 100%;
@@ -805,6 +816,13 @@ textarea {
   border: var(--b1);
   font-size: 11px;
   font-family: var(--mono);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.exp-grid {
+  display: grid;
+  grid-template-columns: 1fr 180px;
 }
 
 .exp-row {
@@ -1605,8 +1623,8 @@ button:hover .btn-arrow {
 
   .tb-btn {
     padding: 0 10px;
-    font-size: 8px;
-    min-height: 34px;
+    font-size: 10px;
+    min-height: 40px;
     white-space: nowrap;
   }
 
@@ -1907,19 +1925,60 @@ button:hover .btn-arrow {
   .location-info-card {
     grid-template-columns: 1fr 1fr !important;
   }
-  .location-info-card > div:nth-child(3),
-  .location-info-card > div:nth-child(4) {
+  .location-info-card > div { border-right: none !important; }
+  .location-info-card > div:nth-child(n+3) {
     border-top: 1px solid var(--ink);
+  }
+  .location-info-card > div:nth-child(even) {
+    border-left: 1px solid var(--ink);
+  }
+
+  /* Compare grids → single column */
+  .compare-search-grid,
+  .compare-selection-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .compare-selection-grid > div:first-child {
+    border-right: none !important;
+    border-bottom: 1px solid var(--ink);
   }
 
   /* Export grid → single column */
-  .exp-grid { grid-template-columns: 1fr !important; }
+  .exp-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .exp-table {
+    display: block;
+    width: 100%;
+  }
+
+  /* ── MOBILE BOTTOM NAV ────────────────────────────────────────────────── */
+  .mobile-bottom-nav {
+    display: flex !important;
+  }
 
   /* Comparison city row → stacked */
   .city-row { flex-direction: column; }
+
+  /* Login Shell → Stacked */
+  .login-shell { grid-template-columns: 1fr !important; }
+  .login-shell .left { display: none; } /* Hide brand panel on mobile for cleaner form access */
+
+  /* ── LANDING PAGE: MOBILE RESPONSIVE ────────────────────────────────── */
+  .landing-hero { grid-template-columns: 1fr !important; }
+  .landing-hero > div:first-child { min-height: 60vh; }
+  .how-it-works { grid-template-columns: 1fr !important; }
+  .use-cases { grid-template-columns: 1fr !important; }
+  .stats-row { grid-template-columns: 1fr 1fr !important; }
+
+  /* ── MOBILE BOTTOM NAV ────────────────────────────────────────────────── */
+  .mobile-bottom-nav {
+    display: flex !important;
+  }
 }
 
-/* ── MOBILE BOTTOM NAV ────────────────────────────────────────────────── */
+/* ── MOBILE BOTTOM NAV (BASE) ────────────────────────────────────────── */
 .mobile-bottom-nav {
   display: none; /* shown only on mobile via media query above */
   position: sticky;
@@ -1958,12 +2017,4 @@ button:hover .btn-arrow {
   width: 16px;
   height: 16px;
 }
-
-/* ── LANDING PAGE: MOBILE RESPONSIVE ────────────────────────────────── */
-@media (max-width: 768px) {
-  .landing-hero { grid-template-columns: 1fr !important; }
-  .landing-hero > div:first-child { min-height: 60vh; }
-  .how-it-works { grid-template-columns: 1fr !important; }
-  .use-cases { grid-template-columns: 1fr !important; }
-  .stats-row { grid-template-columns: 1fr 1fr !important; }
-}
+

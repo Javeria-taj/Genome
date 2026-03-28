@@ -70,7 +70,7 @@ export default function ComparePage() {
         <div className="panel panel-full">
           <div className="phead"><span className="ptitle">Location Selection</span></div>
           <div className="pbody">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+            <div className="compare-search-grid" style={{ gap: 12 }}>
               <div>
                 <div style={{ fontSize: 11, color: "var(--red)", textTransform: "uppercase", letterSpacing: ".1em", marginBottom: 6, fontWeight: 700, fontFamily: "var(--mono)" }}>City A</div>
                 <CitySearchInput
@@ -103,10 +103,7 @@ export default function ComparePage() {
         {/* City name header card — shown when at least one city is selected */}
         {(coordsA || coordsB) && (
           <div className="panel panel-full" style={{ padding: 0 }}>
-            <div style={{
-              display: "grid", gridTemplateColumns: "1fr 1fr",
-              gap: 0, border: "none",
-            }}>
+            <div className="compare-selection-grid" style={{ gap: 0, border: "none" }}>
               <div style={{
                 padding: "10px 14px", borderRight: "1px solid var(--ink)",
                 borderLeft: "4px solid var(--red)",

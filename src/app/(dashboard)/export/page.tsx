@@ -50,7 +50,7 @@ export default function ExportPage() {
             ) : loading ? (
               <SkeletonLoader variant="chart" />
             ) : data ? (
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 180px", gap: 14, alignItems: "start" }}>
+              <div className="exp-grid" style={{ gap: 14, alignItems: "start" }}>
                 {/* Preview table */}
                 <div>
                   <div style={{ fontSize: 11, color: "var(--dim)", marginBottom: 8, fontFamily: "var(--mono)" }}>
@@ -82,7 +82,7 @@ export default function ExportPage() {
 
                   {/* Pagination */}
                   {totalPages > 1 && (
-                    <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 12 }}>
+                    <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 5, marginTop: 12 }}>
                       <button
                         onClick={() => setPage(p => Math.max(0, p - 1))}
                         disabled={page === 0}
