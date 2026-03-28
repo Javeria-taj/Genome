@@ -316,11 +316,11 @@ export default function WorldMap({ onPinsChange }: { onPinsChange?: (count: numb
   const { isDark } = useTheme();
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 0, width: "100%" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 0, width: "100%", flex: 1, minHeight: 0 }}>
       {/* 3D Perspective Map Layer */}
-      <div className="map-perspective-wrapper" style={{ position: "relative" }}>
-        <div className="map-tilt-inner" ref={mapWrapperRef}>
-          <div style={{ height: "210px", width: "100%" }}>
+      <div className="map-perspective-wrapper" style={{ position: "relative", flex: 1, minHeight: 0 }}>
+        <div className="map-tilt-inner" ref={mapWrapperRef} style={{ height: "100%" }}>
+          <div style={{ height: "100%", width: "100%" }}>
             <MapPrimitive
               layer={layer}
               savedLocations={savedLocations}

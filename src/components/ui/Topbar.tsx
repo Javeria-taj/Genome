@@ -12,6 +12,7 @@ export default function Topbar() {
   const health = useSystemHealth();
   const [utcClock, setUtcClock] = useState("");
   const [flash, setFlash] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (selectedCoords) {
@@ -32,6 +33,15 @@ export default function Topbar() {
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
+  }, []);
+  
+  // Listen for sidebar state changes to animate hamburger
+  useEffect(() => {
+    const handler = (e: any) => {
+      if (e.detail) setIsSidebarOpen(e.detail.isOpen);
+    };
+    window.addEventListener('sidebar-state-change', handler);
+    return () => window.removeEventListener('sidebar-state-change', handler);
   }, []);
 
   return (
@@ -63,7 +73,7 @@ export default function Topbar() {
 
       {/* Mobile hamburger — visible only below 768px */}
       <button
-        className="hamburger-btn mobile-only"
+        className={`hamburger-btn mobile-only ${isSidebarOpen ? 'open' : ''}`}
         onClick={() => window.dispatchEvent(new Event('sidebar-toggle'))}
         title="Toggle navigation"
       >
@@ -104,6 +114,22 @@ export default function Topbar() {
 
       {/* Right buttons */}
       <div className="tb-right">
+        {/* GitHub link */}
+        <a
+          href="https://github.com/Javeria-taj"
+          target="_blank"
+          className="tb-btn"
+          style={{ textDecoration: "none" }}
+          title="View on GitHub"
+        >
+          GitHub
+        </a>
+        {/* About link */}
+        <Link href="/about" className="tb-btn" style={{ textDecoration: "none" }}
+          title="About Genome"
+        >
+          About
+        </Link>
         {/* Dark mode toggle */}
         <button className="tb-btn" onClick={toggle} title="Toggle dark mode">
           {isDark ? "● Dark" : "○ Light"}
@@ -118,8 +144,11 @@ export default function Topbar() {
             animation: health.status === 'checking' ? 'pulse 1s infinite' : 'none',
           }} />
           <span style={{ fontSize: '10px' }}>
-            {health.status === 'operational' ? `System: Healthy (${health.latency})` : 
-             health.status === 'unstable' ? 'System: Unstable' : 'Checking Health...'}
+            {health.status === 'operational' 
+              ? (health.latency && health.latency !== '0ms' 
+                  ? `System: Healthy (${health.latency})` 
+                  : 'System: Healthy (Connecting...)')
+              : health.status === 'unstable' ? 'System: Unstable' : 'Checking Health...'}
           </span>
         </button>
 

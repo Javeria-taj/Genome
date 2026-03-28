@@ -4,6 +4,7 @@ import { useCoordinateContext } from "@/context/CoordinateContext";
 import { useClimateData } from "@/hooks/useClimateData";
 import ExtremesBarChart from "@/components/charts/ExtremesBarChart";
 import SkeletonLoader from "@/components/ui/SkeletonLoader";
+import EmptyState from "@/components/ui/EmptyState";
 
 const DECADES = [
   { label: "1985–94", start: 1985, end: 1994 },
@@ -45,30 +46,30 @@ export default function ExtremesPage() {
           </div>
           <div className="pbody">
             {!selectedCoords ? (
-              <div style={{ fontSize: 9, color: "var(--dim)", padding: "18px 0" }}>Select a location on the Overview map first.</div>
+              <EmptyState icon="extremes" message="Select a location to see extreme heat and rain day counts per decade." />
             ) : loading ? (
               <SkeletonLoader variant="bar" />
             ) : data ? (
               <>
-                <div style={{ fontSize: 8.5, color: "var(--dim)", marginBottom: 8 }}>
+                <div style={{ fontSize: 11, color: "var(--dim)", marginBottom: 10, fontFamily: "var(--mono)" }}>
                   Days &gt;35°C heat &nbsp;·&nbsp; Days &gt;50mm rain &nbsp;·&nbsp; {locationLabel} 1985–2024
                 </div>
                 <ExtremesBarChart heatDays={heatDays} rainDays={rainDays} labels={DECADES.map(d => d.label)} />
 
                 {/* Legend */}
-                <div style={{ display: "flex", gap: 12, marginTop: 10 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 8.5, color: "var(--dim)" }}>
+                <div style={{ display: "flex", gap: 14, marginTop: 12 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: "var(--dim)", fontFamily: "var(--mono)" }}>
                     <div className="ext-swatch" style={{ background: "var(--red)", borderColor: "var(--red)" }} />
                     Heat days (&gt;35°C)
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 8.5, color: "var(--dim)" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: "var(--dim)", fontFamily: "var(--mono)" }}>
                     <div className="ext-swatch" style={{ background: "var(--blue)", borderColor: "var(--blue)" }} />
                     Rain days (&gt;50mm)
                   </div>
                 </div>
 
                 {/* Alert */}
-                <div className="ext-alert" style={{ marginTop: 10 }}>
+                <div className="ext-alert" style={{ marginTop: 12, fontSize: 12 }}>
                   Extreme heat days up <b>+{heatPct}%</b> since 1985 &nbsp;·&nbsp;
                   Most extreme decade: <b>{DECADES[worstIdx]?.label}</b>
                 </div>

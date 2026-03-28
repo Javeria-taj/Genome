@@ -5,6 +5,7 @@ import { useClimateData } from "@/hooks/useClimateData";
 import ComparisonChart from "@/components/charts/ComparisonChart";
 import SkeletonLoader from "@/components/ui/SkeletonLoader";
 import CitySearchInput from "@/components/ui/CitySearchInput";
+import EmptyState from "@/components/ui/EmptyState";
 
 const DECADE_RANGES = [
   { label: "1985–94", start: 1985, end: 1994 },
@@ -71,7 +72,7 @@ export default function ComparePage() {
           <div className="pbody">
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
               <div>
-                <div style={{ fontSize: 8.5, color: "var(--red)", textTransform: "uppercase", letterSpacing: ".1em", marginBottom: 5, fontWeight: 700 }}>City A</div>
+                <div style={{ fontSize: 11, color: "var(--red)", textTransform: "uppercase", letterSpacing: ".1em", marginBottom: 6, fontWeight: 700, fontFamily: "var(--mono)" }}>City A</div>
                 <CitySearchInput
                   onSelect={(city, lat, lng) => {
                     setCoordsA({ lat, lng });
@@ -84,7 +85,7 @@ export default function ComparePage() {
                 />
               </div>
               <div>
-                <div style={{ fontSize: 8.5, color: "var(--blue)", textTransform: "uppercase", letterSpacing: ".1em", marginBottom: 5, fontWeight: 700 }}>City B</div>
+                <div style={{ fontSize: 11, color: "var(--blue)", textTransform: "uppercase", letterSpacing: ".1em", marginBottom: 6, fontWeight: 700, fontFamily: "var(--mono)" }}>City B</div>
                 <CitySearchInput
                   onSelect={(city, lat, lng) => {
                     setCoordsB({ lat, lng });
@@ -113,11 +114,11 @@ export default function ComparePage() {
                 background: "var(--paper)",
               }}>
                 <div>
-                  <div style={{ fontSize: "8.5px", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--dim)" }}>City A</div>
-                  <div style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", fontFamily: "Space Mono" }}>
+                  <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--dim)", fontFamily: "var(--mono)" }}>City A</div>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: "var(--ink)", fontFamily: "var(--mono)" }}>
                     {cityAName !== "City A" ? cityAName : "Select a city"}
                   </div>
-                  {countryA && <div style={{ fontSize: "9.5px", color: "var(--dim)", fontFamily: "Space Mono" }}>{countryA}</div>}
+                  {countryA && <div style={{ fontSize: 11, color: "var(--dim)", fontFamily: "var(--mono)", marginTop: 2 }}>{countryA}</div>}
                 </div>
                 <div style={{ marginLeft: "auto", textAlign: "right" }}>
                   <div style={{ width: "28px", height: "3px", background: "var(--red)", marginBottom: "3px" }} />
@@ -132,11 +133,11 @@ export default function ComparePage() {
                 background: "var(--paper)",
               }}>
                 <div>
-                  <div style={{ fontSize: "8.5px", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--dim)" }}>City B</div>
-                  <div style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", fontFamily: "Space Mono" }}>
+                  <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--dim)", fontFamily: "var(--mono)" }}>City B</div>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: "var(--ink)", fontFamily: "var(--mono)" }}>
                     {cityBName !== "City B" ? cityBName : "Select a city"}
                   </div>
-                  {countryB && <div style={{ fontSize: "9.5px", color: "var(--dim)", fontFamily: "Space Mono" }}>{countryB}</div>}
+                  {countryB && <div style={{ fontSize: 11, color: "var(--dim)", fontFamily: "var(--mono)", marginTop: 2 }}>{countryB}</div>}
                 </div>
                 <div style={{ marginLeft: "auto", textAlign: "right" }}>
                   <div style={{
@@ -163,12 +164,12 @@ export default function ComparePage() {
               <>
                 <ComparisonChart dataA={dataA} dataB={dataB} labelA={cityAName} labelB={cityBName} />
                 <div style={{ display: "flex", gap: 14, marginTop: 8 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 8.5, color: "var(--dim)" }}>
-                    <div style={{ width: 16, height: 2, background: "var(--red)" }} />
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: "var(--dim)", fontFamily: "var(--mono)" }}>
+                    <div style={{ width: 18, height: 2, background: "var(--red)" }} />
                     {cityAName} — +{(rateA * 40).toFixed(1)}°C
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 8.5, color: "var(--dim)" }}>
-                    <div style={{ width: 16, height: 2, background: "var(--blue)", opacity: .7 }} />
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: "var(--dim)", fontFamily: "var(--mono)" }}>
+                    <div style={{ width: 18, height: 2, background: "var(--blue)", opacity: .7 }} />
                     {cityBName} — +{(rateB * 40).toFixed(1)}°C
                   </div>
                 </div>
@@ -181,7 +182,7 @@ export default function ComparePage() {
                 )}
               </>
             ) : (
-              <div style={{ fontSize: 9, color: "var(--dim)", padding: "18px 0" }}>Search and select both cities to compare their climate data.</div>
+              <EmptyState icon="compare" message="Search and select two cities to overlay their 40-year climate profiles." />
             )}
           </div>
         </div>

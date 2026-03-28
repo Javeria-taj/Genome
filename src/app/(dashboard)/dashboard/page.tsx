@@ -188,15 +188,15 @@ export default function DashboardPage() {
                     <span className="sl">Years</span>
                   </div>
                 </div>
-                <div style={{ marginTop: 12, borderTop: "var(--bh)", paddingTop: 8 }}>
-                  <div style={{ fontSize: 8.5, color: "var(--dim)", marginBottom: 6 }}>Navigation</div>
+                <div style={{ marginTop: 16, borderTop: "var(--bh)", paddingTop: 12 }}>
+                  <div style={{ fontSize: 13, color: "var(--dim)", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.1em" }}>Navigation</div>
                   {[
                     { label: "Climate Trends →", href: "/trends" },
                     { label: "Compare Cities →", href: "/compare" },
                     { label: "Decade Delta →", href: "/delta" },
                     { label: "Weather Extremes →", href: "/extremes" },
                   ].map(link => (
-                    <Link key={link.href} href={link.href} style={{ display: "block", fontSize: 9, color: "var(--blue)", textDecoration: "none", padding: "4px 0", borderBottom: "var(--bh)" }}>
+                    <Link key={link.href} href={link.href} style={{ display: "block", fontSize: 14, color: "var(--blue)", textDecoration: "none", padding: "8px 0", borderBottom: "var(--bh)" }}>
                       {link.label}
                     </Link>
                   ))}

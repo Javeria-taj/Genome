@@ -138,7 +138,7 @@ export default function MapPrimitive({
                 Delete Pin
               </button>
               <button
-                onClick={() => setSelectedCoords({ lat: loc.lat, lng: loc.lng })}
+                onClick={() => handleMapClick(loc.lat, loc.lng)}
                 style={{ fontSize: 8, border: "1px solid var(--ink)", color: "var(--ink)", background: "transparent", padding: "2px 6px", cursor: "pointer", width: "100%", marginTop: 3, fontFamily: "inherit", textTransform: "uppercase" }}
               >
                 Select

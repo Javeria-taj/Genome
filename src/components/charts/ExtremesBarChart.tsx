@@ -32,8 +32,8 @@ export default function ExtremesBarChart({ heatDays, rainDays, labels }: Props) 
         borderWidth: 1,
         titleColor: "var(--ink,#0f0e0d)",
         bodyColor: "var(--dim,#7a756e)",
-        titleFont: { family: "Space Mono", size: 12, weight: "bold" as any },
-        bodyFont: { family: "Space Mono", size: 11 },
+        titleFont: { family: "var(--mono)", size: 13, weight: "bold" as any },
+        bodyFont: { family: "var(--mono)", size: 12 },
         cornerRadius: 0,
         padding: 11,
       },
@@ -41,12 +41,12 @@ export default function ExtremesBarChart({ heatDays, rainDays, labels }: Props) 
     scales: {
       x: {
         grid: { display: false },
-        ticks: { font: { family: "Space Mono", size: 11 }, color: "#7a756e" },
+        ticks: { font: { family: "var(--mono)", size: 12 }, color: "#7a756e" },
         border: { color: "#0f0e0d", width: 1.2 },
       },
       y: {
         grid: { color: "rgba(15,14,13,0.08)" },
-        ticks: { font: { family: "Space Mono", size: 11 }, color: "#7a756e" },
+        ticks: { font: { family: "var(--mono)", size: 12 }, color: "#7a756e" },
         border: { color: "#0f0e0d", width: 1.2 },
       },
     },

@@ -59,7 +59,7 @@ export default function HeatGauge({ delta, previousDelta = 0 }: HeatGaugeProps) 
           <line x1="10" y1="45" x2="4" y2="45" stroke="var(--dim)" strokeWidth="1" />
           <line x1="90" y1="45" x2="96" y2="45" stroke="var(--dim)" strokeWidth="1" />
         </svg>
-        <div style={{ position: "absolute", bottom: -8, left: 0, right: 0, textAlign: "center", fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 24, fontWeight: 700, color: "var(--ink)", letterSpacing: "-0.02em" }}>
+        <div style={{ position: "absolute", bottom: -8, left: 0, right: 0, textAlign: "center", fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 28, fontWeight: 700, color: "var(--ink)", letterSpacing: "-0.02em" }}>
           {sign}{displayDelta.toFixed(1)}°
         </div>
       </div>

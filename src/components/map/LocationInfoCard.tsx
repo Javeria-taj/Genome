@@ -15,9 +15,9 @@ export default function LocationInfoCard() {
       try {
         const str = new Intl.DateTimeFormat("en-US", {
           timeZone: selectedLocation.timezone,
-          hour: "2-digit",
+          hour: "numeric",
           minute: "2-digit",
-          hour12: false,
+          hour12: true,
         }).format(new Date());
         setLocalTime(str);
       } catch {
@@ -56,7 +56,7 @@ export default function LocationInfoCard() {
   return (
     <div className="fade-in" style={{
       display: "grid",
-      gridTemplateColumns: "2fr 1fr 1fr 1fr",
+      gridTemplateColumns: "1.5fr 2fr 1fr 1.5fr",
       borderBottom: "1.5px solid var(--ink)",
       borderTop: "none",
       background: "var(--paper)",

@@ -5,6 +5,7 @@ import { useCoordinateContext } from "@/context/CoordinateContext";
 import { useClimateData } from "@/hooks/useClimateData";
 import HeatGauge from "@/components/charts/HeatGauge";
 import SkeletonLoader from "@/components/ui/SkeletonLoader";
+import EmptyState from "@/components/ui/EmptyState";
 
 const DECADE_OPTIONS = [
   { label: "1980–1990", start: 1985, end: 1990 },
@@ -73,7 +74,7 @@ export default function DeltaPage() {
           </div>
           <div className="pbody">
             {!selectedCoords ? (
-              <div style={{ fontSize: 9, color: "var(--dim)", padding: "18px 0" }}>Select a location on the Overview map first.</div>
+              <EmptyState icon="delta" message="Select a location and pick two decades to calculate the temperature rise." />
             ) : loading ? (
               <SkeletonLoader variant="chart" />
             ) : data ? (
@@ -89,7 +90,7 @@ export default function DeltaPage() {
                       <option key={d.label} value={i}>{d.label}</option>
                     ))}
                   </select>
-                  <span style={{ fontSize: 11, color: "var(--dim)", flexShrink: 0 }}>→</span>
+                  <span style={{ fontSize: 13, color: "var(--dim)", flexShrink: 0, padding: "0 6px" }}>→</span>
                   <select
                     className="d-sel"
                     value={decadeB}
@@ -99,21 +100,25 @@ export default function DeltaPage() {
                       <option key={d.label} value={i}>{d.label}</option>
                     ))}
                   </select>
+                  <button onClick={handleRecalc} style={{
+                    padding: "8px 16px", background: "var(--ink)", color: "var(--paper)",
+                    border: "none", fontSize: 13, fontWeight: 700, fontFamily: "var(--mono)",
+                    textTransform: "uppercase", letterSpacing: "0.1em", cursor: "pointer",
+                    marginLeft: 12,
+                  }}>Recalculate</button>
                 </div>
 
                 {/* Heat gauge */}
                 <HeatGauge delta={currentDelta} previousDelta={prevDelta} />
 
                 {/* Meta */}
-                <div style={{ marginTop: 10, fontSize: 8.5, color: "var(--dim)", display: "flex", gap: 12, flexWrap: "wrap" }}>
-                  <span>Precip Δ <b style={{ color: "var(--ink)" }}>{parseFloat(precipDelta) >= 0 ? "+" : ""}{precipDelta}mm</b></span>
-                  {extremeDelta !== null && <span>Extreme days Δ <b style={{ color: "var(--ink)" }}>{extremeDelta >= 0 ? "+" : ""}{extremeDelta}</b></span>}
-                  <span>Trend <b style={{ color: currentDelta > 1.5 ? "var(--red)" : "var(--dim)" }}>{currentDelta > 1.5 ? "Accelerating" : "Stable"}</b></span>
+                <div style={{ fontSize: 11, color: "var(--dim)", marginTop: 12, borderTop: "var(--bh)", paddingTop: 10, fontFamily: "var(--mono)" }}>
+                  Precipitation Delta: <b style={{ color: "var(--ink)" }}>{precipDelta}mm</b> &nbsp;·&nbsp;
+                  Extreme Heat Days Δ: <b style={{ color: "var(--red)" }}>{extremeDelta !== null ? (extremeDelta > 0 ? "+" : "") + extremeDelta : "—"}</b>
                 </div>
-
-                <button className="btn-calc" onClick={handleRecalc}>
-                  Recalculate Delta →
-                </button>
+                <div style={{ fontSize: 11, color: "var(--dim)", borderTop: "var(--bh)", paddingTop: 10, marginTop: 12, fontFamily: "var(--mono)" }}>
+                  Historical shift relative to {DECADE_OPTIONS[decadeA].label} baseline
+                </div>
               </>
             ) : null}
           </div>

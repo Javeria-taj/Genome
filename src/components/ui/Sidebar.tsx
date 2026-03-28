@@ -31,6 +31,11 @@ export default function Sidebar() {
   const [savedPins, setSavedPins] = useState<any[]>([]);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // Dispatch event when mobileOpen changes
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('sidebar-state-change', { detail: { isOpen: mobileOpen } }));
+  }, [mobileOpen]);
+
   // Listen for hamburger toggle event from Topbar
   useEffect(() => {
     const handler = () => setMobileOpen(prev => !prev);
@@ -64,7 +69,10 @@ export default function Sidebar() {
     />
     <div className={`sb no-print${collapsed ? " collapsed" : ""}${mobileOpen ? " mobile-open" : ""}`} id="sb">
       {/* Toggle */}
-      <div className="sb-toggle" onClick={() => setCollapsed(c => !c)}>
+      <div className="sb-toggle" onClick={() => {
+        setCollapsed(c => !c);
+        setTimeout(() => window.dispatchEvent(new Event('resize')), 220); // Sync with transition
+      }}>
         <div className="toggle-icon">
           <span style={{ width: "100%" }} />
           <span style={{ width: "100%" }} />
@@ -109,11 +117,11 @@ export default function Sidebar() {
           ))
         ) : (
           <div style={{
-            padding: "10px 13px", fontSize: "11px", color: "var(--dim)",
-            fontStyle: "italic", borderBottom: "1px solid var(--ink)",
-            lineHeight: 1.5, fontFamily: "var(--mono)",
+            padding: "12px 13px", fontSize: "10.5px", color: "var(--dim)",
+            fontFamily: "Space Mono", lineHeight: 1.7, fontStyle: "italic",
+            borderBottom: "1px solid var(--ink)",
           }}>
-            No saved pins yet.<br />Click map to pin a location.
+            No saved pins yet.<br />Click the map to pin a location,<br />then click &quot;Save Pin&quot;.
           </div>
         )}
       </div>
@@ -121,13 +129,13 @@ export default function Sidebar() {
       {/* Footer */}
       <div className="sb-footer">
         <div className="sb-footer-inner">
-          <div style={{ fontSize: 8.5, color: "var(--dim)" }}>Signed in as</div>
-          <div style={{ fontSize: 10, fontWeight: 700, marginTop: 2 }}>{session?.user?.name || "User"}</div>
-          <div style={{ fontSize: 8.5, color: "var(--dim)", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+          <div style={{ fontSize: 11, color: "var(--dim)", fontFamily: "var(--mono)" }}>Signed in as</div>
+          <div style={{ fontSize: 13, fontWeight: 700, marginTop: 4, fontFamily: "var(--mono)" }}>{session?.user?.name || "User"}</div>
+          <div style={{ fontSize: 11, color: "var(--dim)", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", fontFamily: "var(--mono)" }}>
             {session?.user?.email}
           </div>
           <div
-            style={{ fontSize: 8.5, color: "var(--red)", marginTop: 6, cursor: "pointer", textDecoration: "underline" }}
+            style={{ fontSize: 11, color: "var(--red)", marginTop: 8, cursor: "pointer", textDecoration: "underline", fontFamily: "var(--mono)", fontWeight: 700 }}
             onClick={() => signOut({ callbackUrl: "/login" })}
           >
             Sign out

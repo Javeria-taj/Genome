@@ -47,8 +47,8 @@ export default function ComparisonChart({ dataA, dataB, labelA, labelB }: Props)
         borderWidth: 1,
         titleColor: inkColor,
         bodyColor: dimColor,
-        titleFont: { family: "Space Mono", size: 12, weight: "bold" as any },
-        bodyFont: { family: "Space Mono", size: 11 },
+        titleFont: { family: "var(--mono)", size: 13, weight: "bold" as any },
+        bodyFont: { family: "var(--mono)", size: 12 },
         padding: 11,
         cornerRadius: 0,
         displayColors: true,
@@ -64,12 +64,12 @@ export default function ComparisonChart({ dataA, dataB, labelA, labelB }: Props)
     scales: {
       x: {
         grid: { color: gridColor, lineWidth: 0.5 },
-        ticks: { font: { family: "Space Mono", size: 11 }, color: dimColor, maxRotation: 0 },
+        ticks: { font: { family: "var(--mono)", size: 12 }, color: dimColor, maxRotation: 0 },
         border: { color: inkColor, width: 1.2 },
       },
       y: {
         grid: { color: gridColor, lineWidth: 0.5 },
-        ticks: { font: { family: "Space Mono", size: 11 }, color: dimColor, callback: v => v + "\u00b0" },
+        ticks: { font: { family: "var(--mono)", size: 12 }, color: dimColor, callback: v => v + "\u00b0" },
         border: { color: inkColor, width: 1.2 },
       },
     },
@@ -128,11 +128,11 @@ export default function ComparisonChart({ dataA, dataB, labelA, labelB }: Props)
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <div style={{ width: "24px", height: "14px", background: accentGlow, borderTop: "2px solid " + accentColor }} />
-          <span style={{ fontSize: "11px", color: inkColor, fontFamily: "Space Mono" }}>{labelA}</span>
+          <span style={{ fontSize: "12px", color: inkColor, fontFamily: "var(--mono)" }}>{labelA}</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <div style={{ width: "24px", height: "14px", background: blueGlow, borderTop: "2px dashed " + blueColor }} />
-          <span style={{ fontSize: "11px", color: inkColor, fontFamily: "Space Mono" }}>{labelB}</span>
+          <span style={{ fontSize: "12px", color: inkColor, fontFamily: "var(--mono)" }}>{labelB}</span>
         </div>
       </div>
 
@@ -143,8 +143,8 @@ export default function ComparisonChart({ dataA, dataB, labelA, labelB }: Props)
           backgroundColor: isDark ? "rgba(212,103,42,0.1)" : "rgba(181,69,27,0.1)",
           border: "1.5px solid var(--accent)",
           padding: "8px 12px",
-          fontFamily: "Space Mono",
-          fontSize: "10px",
+          fontFamily: "var(--mono)",
+          fontSize: "11px",
           color: inkColor,
           zIndex: 10,
           pointerEvents: "none",

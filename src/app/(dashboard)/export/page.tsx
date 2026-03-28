@@ -46,14 +46,14 @@ export default function ExportPage() {
           <div className="phead"><span className="ptitle">Data Export</span></div>
           <div className="pbody">
             {!selectedCoords ? (
-              <div style={{ fontSize: 9, color: "var(--dim)", padding: "18px 0" }}>Select a location on the Overview map first.</div>
+              <div style={{ fontSize: 11, color: "var(--dim)", padding: "20px 0", fontFamily: "var(--mono)" }}>Select a location on the Overview map first.</div>
             ) : loading ? (
               <SkeletonLoader variant="chart" />
             ) : data ? (
               <div style={{ display: "grid", gridTemplateColumns: "1fr 180px", gap: 14, alignItems: "start" }}>
                 {/* Preview table */}
                 <div>
-                  <div style={{ fontSize: 8.5, color: "var(--dim)", marginBottom: 6 }}>
+                  <div style={{ fontSize: 11, color: "var(--dim)", marginBottom: 8, fontFamily: "var(--mono)" }}>
                     Preview — {locationDisplayName} (1985–2024) · {data.length} records
                   </div>
                   <div className="exp-table">
@@ -70,7 +70,7 @@ export default function ExportPage() {
                       return (
                         <div key={row.year} className="exp-row" style={isLatest ? { background: "color-mix(in srgb, var(--red) 5%, transparent)" } : undefined}>
                           <div className="exp-cell" style={isLatest ? { fontWeight: 700 } : undefined}>{row.year}</div>
-                          <div className="exp-cell" style={{ fontSize: 9, color: "var(--dim)" }}>{selectedLocation?.city || "—"}</div>
+                          <div className="exp-cell" style={{ fontSize: 11, color: "var(--dim)" }}>{selectedLocation?.city || "—"}</div>
                           <div className="exp-cell" style={isLatest ? { color: "var(--red)", fontWeight: 700 } : undefined}>{row.avgTemp.toFixed(1)}°C</div>
                           <div className="exp-cell">{Math.round(row.totalPrecip).toLocaleString()}</div>
                           <div className="exp-cell" style={row.extremeHeatDays > 30 ? { color: "var(--red)", fontWeight: 700 } : undefined}>{row.extremeHeatDays}</div>
@@ -82,23 +82,23 @@ export default function ExportPage() {
 
                   {/* Pagination */}
                   {totalPages > 1 && (
-                    <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 8 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 12 }}>
                       <button
                         onClick={() => setPage(p => Math.max(0, p - 1))}
                         disabled={page === 0}
-                        style={{ border: "var(--b1)", background: "transparent", color: "var(--ink)", fontFamily: "var(--mono)", fontSize: 9, padding: "3px 8px", cursor: page > 0 ? "pointer" : "not-allowed", opacity: page === 0 ? .4 : 1 }}
+                        style={{ border: "var(--b1)", background: "transparent", color: "var(--ink)", fontFamily: "var(--mono)", fontSize: 11, padding: "4px 10px", cursor: page > 0 ? "pointer" : "not-allowed", opacity: page === 0 ? .4 : 1 }}
                       >←</button>
                       {Array.from({ length: totalPages }, (_, i) => (
                         <button
                           key={i}
                           onClick={() => setPage(i)}
-                          style={{ border: "var(--b1)", background: i === page ? "var(--ink)" : "transparent", color: i === page ? "var(--paper)" : "var(--ink)", fontFamily: "var(--mono)", fontSize: 9, padding: "3px 8px", cursor: "pointer", minWidth: 28 }}
+                          style={{ border: "var(--b1)", background: i === page ? "var(--ink)" : "transparent", color: i === page ? "var(--paper)" : "var(--ink)", fontFamily: "var(--mono)", fontSize: 11, padding: "4px 10px", cursor: "pointer", minWidth: 32 }}
                         >{i + 1}</button>
                       ))}
                       <button
                         onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
                         disabled={page === totalPages - 1}
-                        style={{ border: "var(--b1)", background: "transparent", color: "var(--ink)", fontFamily: "var(--mono)", fontSize: 9, padding: "3px 8px", cursor: page < totalPages - 1 ? "pointer" : "not-allowed", opacity: page === totalPages - 1 ? .4 : 1 }}
+                        style={{ border: "var(--b1)", background: "transparent", color: "var(--ink)", fontFamily: "var(--mono)", fontSize: 11, padding: "4px 10px", cursor: page < totalPages - 1 ? "pointer" : "not-allowed", opacity: page === totalPages - 1 ? .4 : 1 }}
                       >→</button>
                     </div>
                   )}

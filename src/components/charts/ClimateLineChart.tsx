@@ -155,8 +155,8 @@ export default function ClimateLineChart({ data }: Props) {
         borderWidth: 1,
         titleColor: inkColor,
         bodyColor: dimColor,
-        titleFont: { family: "Space Mono", size: 12, weight: "bold" as any },
-        bodyFont: { family: "Space Mono", size: 11 },
+        titleFont: { family: "var(--mono)", size: 13, weight: "bold" as any },
+        bodyFont: { family: "var(--mono)", size: 12 },
         padding: 11,
         displayColors: true,
         callbacks: {
@@ -171,19 +171,19 @@ export default function ClimateLineChart({ data }: Props) {
     scales: {
       x: {
         grid: { color: gridColor, lineWidth: 0.5 },
-        ticks: { color: dimColor, font: { family: "Space Mono", size: 11 } },
+        ticks: { color: dimColor, font: { family: "var(--mono)", size: 12 } },
         border: { color: inkColor, width: 1.2 },
       },
       y: {
         position: "left",
         grid: { color: gridColor, lineWidth: 0.5 },
-        ticks: { color: accentColor, font: { family: "Space Mono", size: 11 }, callback: v => v + "\u00b0" },
+        ticks: { color: accentColor, font: { family: "var(--mono)", size: 12 }, callback: v => v + "\u00b0" },
         border: { color: inkColor, width: 1.2 },
       },
       y1: {
         position: "right",
         grid: { drawOnChartArea: false },
-        ticks: { color: blueColor, font: { family: "Space Mono", size: 11 }, callback: v => v + "mm" },
+        ticks: { color: blueColor, font: { family: "var(--mono)", size: 12 }, callback: v => v + "mm" },
         border: { color: blueColor, width: 1 },
       },
     },
@@ -316,14 +316,14 @@ export default function ClimateLineChart({ data }: Props) {
             style={{
               position: 'absolute', top: '6px', right: '8px',
               background: 'none', border: 'none', cursor: 'pointer',
-              color: 'var(--dim)', fontFamily: 'Space Mono', fontSize: '14px',
+              color: 'var(--dim)', fontFamily: 'var(--mono)', fontSize: '16px',
               lineHeight: 1,
             }}
           >×</button>
 
           <div style={{
-            fontSize: '13px', fontWeight: '700',
-            fontFamily: 'Space Mono',
+            fontSize: '15px', fontWeight: '700',
+            fontFamily: 'var(--mono)',
             borderBottom: '1px solid rgba(15,14,13,0.12)',
             paddingBottom: '6px', marginBottom: '8px',
             color: 'var(--ink)',
@@ -339,7 +339,7 @@ export default function ClimateLineChart({ data }: Props) {
             <div key={row.label} style={{
               display: 'flex', justifyContent: 'space-between',
               alignItems: 'baseline',
-              fontSize: '10.5px', fontFamily: 'Space Mono',
+              fontSize: '12px', fontFamily: 'var(--mono)',
               marginBottom: '5px',
               borderBottom: '1px solid rgba(15,14,13,0.07)',
               paddingBottom: '5px',
@@ -371,8 +371,8 @@ export default function ClimateLineChart({ data }: Props) {
           padding: '5px 0',
           borderTop: '1px solid rgba(15,14,13,0.1)',
           marginTop: '8px',
-          fontSize: '9.5px',
-          fontFamily: 'Space Mono',
+          fontSize: '11px',
+          fontFamily: 'var(--mono)',
           color: 'var(--dim)',
         }}>
           <span style={{
