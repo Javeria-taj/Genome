@@ -142,7 +142,13 @@ export default function LoginForm() {
           <div style={{ marginTop: "6px", textAlign: "right" }}>
             <span
               onClick={() => { setForgotOpen(true); setForgotEmail(email); }}
-              style={{ cursor: "pointer", textDecoration: "underline", color: "var(--accent)", fontSize: "10px" }}
+              style={{ 
+                cursor: "pointer", 
+                textDecoration: "underline", 
+                color: "var(--accent)", 
+                fontSize: "clamp(12px, 0.85vw, 13px)",
+                letterSpacing: "0.02em"
+              }}
             >
               Forgot password?
             </span>
@@ -151,8 +157,13 @@ export default function LoginForm() {
 
         <AuthButton status={status}>Authenticate & Enter Dashboard</AuthButton>
 
-        <div style={{ marginTop: "12px", display: "flex", justifyContent: "center" }}>
-          <Link href="/register" style={{ fontSize: "10px", color: "var(--ink)", textDecoration: "underline" }}>
+        <div style={{ marginTop: "16px", display: "flex", justifyContent: "center" }}>
+          <Link href="/register" style={{ 
+            fontSize: "clamp(12px, 0.85vw, 13px)", 
+            color: "var(--ink)", 
+            textDecoration: "underline",
+            letterSpacing: "0.02em"
+          }}>
             Create account
           </Link>
         </div>

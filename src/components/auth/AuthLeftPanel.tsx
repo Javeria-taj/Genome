@@ -79,7 +79,7 @@ export default function AuthLeftPanel({ variant }: AuthLeftPanelProps) {
               <span className="ls-lbl">Avg rise</span>
             </div>
             <div className="ls">
-              <span className="ls-val">∞</span>
+              <span className="ls-val" style={{ fontSize: '32px', lineHeight: '0.8' }}>∞</span>
               <span className="ls-lbl">Locations</span>
             </div>
           </div>

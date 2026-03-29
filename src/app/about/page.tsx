@@ -82,22 +82,50 @@ export default function AboutPage() {
           ))}
         </div>
 
-        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+        {/* ── ROADMAP SECTION ── */}
+        <div style={{ marginBottom: "40px" }}>
+          <div style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.14em",
+                        color: "var(--dim, #7a756e)", marginBottom: "20px" }}>
+            ROADMAP
+          </div>
+
+          {[
+            { t: "Multi-Location Comparison", s: "Complete", d: "comparison across two cities simultaneously." },
+            { t: "Decade-Level Deltas", s: "Complete", d: "measure 10-year shifts in temperature/rain." },
+            { t: "Mobile Navigation", s: "Complete", d: "custom bottom bar for handheld devices." },
+            { t: "Extreme Weather Tracking", s: "Complete", d: "daily resolution count for heat/rainfall spikes." },
+            { t: "CSV Export Service", s: "Planned", d: "one-click export for all 40 years of local data." },
+          ].map((item, i) => (
+            <div key={i} style={{ padding: "18px 0", borderBottom: i === 4 ? "none" : "1px solid rgba(15,14,13,0.08)" }}>
+              <div style={{ fontSize: "13px", fontWeight: 700, marginBottom: "4px", letterSpacing: "0.02em" }}>
+                {item.t}
+              </div>
+              <div style={{ fontSize: "11.5px", color: "var(--dim, #7a756e)", lineHeight: 1.6 }}>
+                <span style={{ color: "var(--dim2, #a09890)" }}>{item.s} —</span> {item.d}
+              </div>
+            </div>
+          ))}
+          <div style={{ borderTop: "1px solid rgba(15,14,13,0.08)", height: "1px" }} />
+        </div>
+
+        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginTop: "40px" }}>
           <a href="https://github.com/Javeria-taj" target="_blank" style={{
-            display: "flex", alignItems: "center", gap: "8px",
+            display: "flex", alignItems: "center", justifyContent: "center",
             background: "var(--ink, #0f0e0d)", color: "var(--paper, #f5f0e8)",
-            fontFamily: "Space Mono", fontSize: "10.5px", textTransform: "uppercase",
-            letterSpacing: "0.1em", padding: "10px 18px", textDecoration: "none",
+            fontFamily: "Space Mono", fontSize: "11px", textTransform: "uppercase",
+            letterSpacing: "0.1em", padding: "12px 24px", textDecoration: "none",
+            minWidth: "200px"
           }}>
-            View on GitHub →
+            VIEW ON GITHUB →
           </a>
           <Link href="/dashboard" style={{
-            display: "flex", alignItems: "center", gap: "8px",
+            display: "flex", alignItems: "center", justifyContent: "center",
             border: "1px solid var(--ink, #0f0e0d)", color: "var(--ink, #0f0e0d)",
-            fontFamily: "Space Mono", fontSize: "10.5px", textTransform: "uppercase",
-            letterSpacing: "0.1em", padding: "10px 18px", textDecoration: "none",
+            fontFamily: "Space Mono", fontSize: "11px", textTransform: "uppercase",
+            letterSpacing: "0.1em", padding: "12px 24px", textDecoration: "none",
+            minWidth: "200px"
           }}>
-            Open Dashboard
+            OPEN DASHBOARD
           </Link>
         </div>
       </div>

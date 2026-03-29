@@ -105,8 +105,13 @@ export default function RegisterForm() {
           Create Account &amp; Enter Dashboard
         </AuthButton>
         
-        <div style={{ marginTop: "12px", display: "flex", justifyContent: "center" }}>
-          <Link href="/login" style={{ fontSize: "10px", color: "var(--ink)", textDecoration: "underline" }}>
+        <div style={{ marginTop: "16px", display: "flex", justifyContent: "center" }}>
+          <Link href="/login" style={{ 
+            fontSize: "clamp(12px, 0.85vw, 13px)", 
+            color: "var(--ink)", 
+            textDecoration: "underline",
+            letterSpacing: "0.02em"
+          }}>
             Already have an account? Sign in
           </Link>
         </div>

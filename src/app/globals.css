@@ -62,7 +62,7 @@ body {
 
 /* ── AUTH PAGES ── */
 .login-headline  { font-size: 48px; line-height: 1.12; }
-.login-subtext   { font-size: 14px; line-height: 1.85; }
+.login-subtext   { font-size: clamp(14.5px, 1.1vw, 16.5px); line-height: 1.85; }
 .stats-val       { font-size: 26px; }
 .stats-lbl       { font-size: 11px; letter-spacing: 0.12em; }
 
@@ -1249,17 +1249,17 @@ textarea {
 }
 
 .ls-val {
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 700;
   display: block;
   color: rgba(245, 240, 232, .9);
 }
 
 .ls-lbl {
-  font-size: 8px;
+  font-size: 10px;
   color: rgba(245, 240, 232, .45);
   text-transform: uppercase;
-  letter-spacing: .1em;
+  letter-spacing: .12em;
   margin-top: 2px;
 }
 
