@@ -16,8 +16,6 @@ export default function LandingPage() {
       <section
         className="landing-hero"
         style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
           minHeight: "100vh",
           background: "#09090f",
           color: "#ede8dc",
@@ -28,15 +26,16 @@ export default function LandingPage() {
           <StarField />
           <EarthWireframe />
           <div
+            className="landing-left-inner"
             style={{
               position: 'relative',
               zIndex: 10,
-              padding: '40px 48px',
-              paddingTop: '80px',
+              padding: 'clamp(32px, 5vw, 48px)',
+              paddingTop: 'clamp(60px, 8vw, 80px)',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'flex-start',
-              minHeight: '100vh',
+              justifyContent: 'center',
+              minHeight: 'clamp(400px, 60vh, 100vh)',
               gap: '0',
             }}
           >
@@ -158,10 +157,7 @@ export default function LandingPage() {
           </div>
 
           {/* 1. Stats row — 3 columns */}
-          <div className="landing-stats" style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: 0,
+          <div className="landing-stats-grid" style={{
             border: '1.5px solid #0f0e0d',
           }}>
             {[
@@ -280,11 +276,8 @@ export default function LandingPage() {
           Three steps to 40 years of insight.
         </h2>
         <div
-          className="how-it-works-grid"
+          className="landing-how-grid"
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 0,
             border: "1.5px solid #0f0e0d",
           }}
         >
@@ -382,11 +375,8 @@ export default function LandingPage() {
           Real-world use cases.
         </h2>
         <div
-          className="use-cases-grid"
+          className="landing-use-cases-grid"
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap: 0,
             border: "1.5px solid #0f0e0d",
           }}
         >
@@ -456,18 +446,19 @@ export default function LandingPage() {
 
       {/* ── SECTION 4: FOOTER ───────────────────────────────── */}
       <footer
+        className="landing-footer"
         style={{
           background: "#0f0e0d",
           color: "#ede8dc",
-          padding: "28px 48px",
+          padding: "clamp(24px, 5vw, 48px)",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           borderTop: "1.5px solid rgba(237,232,220,0.1)",
           fontFamily: "Space Mono",
-          fontSize: "13.5px",
+          fontSize: "10.5px",
           flexWrap: "wrap",
-          gap: "16px",
+          gap: "24px",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
