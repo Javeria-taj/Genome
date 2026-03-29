@@ -24,7 +24,7 @@ export default function LandingPage() {
         }}
       >
         {/* LEFT — Earth animation */}
-        <div style={{ position: "relative", overflow: "hidden" }}>
+        <div className="landing-left" style={{ position: "relative", overflow: "hidden" }}>
           <StarField />
           <EarthWireframe />
           <div
@@ -47,8 +47,8 @@ export default function LandingPage() {
               left: '48px',
               display: 'flex', alignItems: 'center', gap: '10px',
             }}>
-              <FaviconSVG size={20} />
-              <span style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '.08em' }}>Genome</span>
+              <FaviconSVG size={22} />
+              <span style={{ fontSize: '18px', fontWeight: 700, letterSpacing: '.08em' }}>Genome</span>
             </div>
 
             {/* Main content — centered vertically */}
@@ -56,7 +56,7 @@ export default function LandingPage() {
               {/* Small label above headline */}
               <div style={{
                 fontFamily: "'Space Mono', monospace",
-                fontSize: '11px',
+                fontSize: '13px',
                 textTransform: 'uppercase',
                 letterSpacing: '0.14em',
                 color: 'rgba(237,232,220,0.4)',
@@ -69,21 +69,21 @@ export default function LandingPage() {
               <h1 style={{
                 fontFamily: "'Instrument Serif', serif",
                 fontStyle: 'italic',
-                fontSize: 'clamp(36px, 4.5vw, 64px)',
+                fontSize: 'clamp(38px, 4.5vw, 58px)',
                 lineHeight: 1.08,
                 letterSpacing: '-0.02em',
                 color: 'rgba(237,232,220,0.95)',
                 marginBottom: '20px',
               }}>
-                40 years of<br/>
-                climate data,<br/>
+                40 years of<br />
+                climate data,<br />
                 <em>mapped.</em>
               </h1>
 
               {/* Subtext */}
               <p style={{
                 fontFamily: "'Space Mono', monospace",
-                fontSize: 'clamp(11px, 1.1vw, 13px)',
+                fontSize: 'clamp(12px, 1.4vw, 16px)',
                 lineHeight: 1.85,
                 color: 'rgba(237,232,220,0.38)',
                 marginBottom: '32px',
@@ -95,41 +95,28 @@ export default function LandingPage() {
               </p>
 
               {/* CTAs */}
-              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                <Link href="/login" style={{
+              <div className="landing-ctas" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                <Link href="/demo" style={{
                   display: 'flex', alignItems: 'center', gap: '8px',
                   background: '#ede8dc', color: '#0f0e0d',
                   fontFamily: "'Space Mono', monospace",
-                  fontSize: '12px',
+                  fontSize: '15.5px',
                   textTransform: 'uppercase', letterSpacing: '0.1em',
                   padding: '12px 22px', textDecoration: 'none',
                   border: '1.5px solid #ede8dc',
-                  transition: 'opacity 0.15s',
                 }}>
-                  → Sign In
+                  Try Demo →
                 </Link>
                 <Link href="/register" style={{
                   display: 'flex', alignItems: 'center', gap: '8px',
                   background: 'transparent', color: '#ede8dc',
                   fontFamily: "'Space Mono', monospace",
-                  fontSize: '12px',
+                  fontSize: '15.5px',
                   textTransform: 'uppercase', letterSpacing: '0.1em',
                   padding: '12px 22px', textDecoration: 'none',
                   border: '1px solid rgba(237,232,220,0.35)',
-                  transition: 'border-color 0.15s',
                 }}>
                   Create Account
-                </Link>
-                <Link href="/demo" style={{
-                  display: 'flex', alignItems: 'center', gap: '8px',
-                  background: 'transparent', color: 'rgba(237,232,220,0.45)',
-                  fontFamily: "'Space Mono', monospace",
-                  fontSize: '12px',
-                  textTransform: 'uppercase', letterSpacing: '0.1em',
-                  padding: '12px 18px', textDecoration: 'none',
-                  border: '1px solid rgba(237,232,220,0.15)',
-                }}>
-                  Try Demo →
                 </Link>
               </div>
             </div>
@@ -138,6 +125,7 @@ export default function LandingPage() {
 
         {/* RIGHT — Stats + Feature list */}
         <div
+          className="landing-right"
           style={{
             background: '#f5f0e8',
             display: 'flex',
@@ -145,10 +133,32 @@ export default function LandingPage() {
             padding: '48px 56px',
             justifyContent: 'center',
             gap: '32px',
+            position: 'relative',
           }}
         >
-          {/* 1. Stats row — 3 columns */}
+          {/* Sign In link top right */}
           <div style={{
+            position: 'absolute', top: '20px', right: '24px',
+            fontFamily: "'Space Mono', monospace", fontSize: '14px',
+          }}>
+            <Link href="/login" style={{ color: '#242321ff', textDecoration: 'underline' }}>
+              Already have an account? Sign in →
+            </Link>
+          </div>
+
+          {/* Right panel top label */}
+          <div style={{
+            fontFamily: "'Space Mono', monospace",
+            fontSize: '12px', textTransform: 'uppercase',
+            letterSpacing: '0.14em', color: '#7a756e',
+            marginBottom: '24px',
+            paddingTop: '0',
+          }}>
+            Genome · Climate Intelligence Platform
+          </div>
+
+          {/* 1. Stats row — 3 columns */}
+          <div className="landing-stats" style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
             gap: 0,
@@ -156,8 +166,8 @@ export default function LandingPage() {
           }}>
             {[
               { val: '14,600', label: 'Daily data points' },
-              { val: '40yr',   label: 'Historical coverage' },
-              { val: '195',    label: 'Countries covered' },
+              { val: '40yr', label: 'Historical coverage' },
+              { val: '195', label: 'Countries covered' },
             ].map((s, i) => (
               <div key={s.label} style={{
                 padding: '18px 20px',
@@ -166,7 +176,7 @@ export default function LandingPage() {
                 <div style={{
                   fontFamily: "'Instrument Serif', serif",
                   fontStyle: 'italic',
-                  fontSize: 'clamp(24px, 2.5vw, 36px)',
+                  fontSize: 'clamp(32px, 3.2vw, 46px)',
                   color: '#0f0e0d',
                   lineHeight: 1,
                   marginBottom: '4px',
@@ -175,7 +185,7 @@ export default function LandingPage() {
                 </div>
                 <div style={{
                   fontFamily: "'Space Mono', monospace",
-                  fontSize: '10px',
+                  fontSize: '12px',
                   textTransform: 'uppercase',
                   letterSpacing: '0.1em',
                   color: '#7a756e',
@@ -190,7 +200,7 @@ export default function LandingPage() {
           <div>
             <div style={{
               fontFamily: "'Space Mono', monospace",
-              fontSize: '10px',
+              fontSize: '14px',
               textTransform: 'uppercase',
               letterSpacing: '0.12em',
               color: '#7a756e',
@@ -199,12 +209,12 @@ export default function LandingPage() {
               What you can do
             </div>
             {[
-              ['Interactive World Map',       'Click any location to fetch its full climate history'],
-              ['40-Year Temperature Trends',  'Annual avg temperature + precipitation since 1985'],
-              ['City Comparison',             "Overlay two locations — see who's warming faster"],
-              ['Decade Delta Calculator',     'Measure exact temperature rise between any two decades'],
-              ['Extreme Events Tracker',      'Count days above 35°C or 50mm rain per decade'],
-              ['CSV Export',                  'Download raw data for use in Excel or research tools'],
+              ['Interactive World Map', 'Click any location to fetch its full climate history'],
+              ['40-Year Temperature Trends', 'Annual avg temperature + precipitation since 1985'],
+              ['City Comparison', "Overlay two locations — see who's warming faster"],
+              ['Decade Delta Calculator', 'Measure exact temperature rise between any two decades'],
+              ['Extreme Events Tracker', 'Count days above 35°C or 50mm rain per decade'],
+              ['CSV Export', 'Download raw data for use in Excel or research tools'],
             ].map(([title, desc]) => (
               <div key={title} style={{
                 display: 'flex', gap: '12px', alignItems: 'flex-start',
@@ -215,18 +225,18 @@ export default function LandingPage() {
                   width: '6px', height: '6px',
                   background: '#b5451b', borderRadius: '50%',
                   marginTop: '5px', flexShrink: 0,
-                }}/>
+                }} />
                 <div>
                   <div style={{
                     fontFamily: "'Space Mono', monospace",
-                    fontSize: '12px',
+                    fontSize: '15px',
                     fontWeight: '700', color: '#0f0e0d',
                   }}>
                     {title}
                   </div>
                   <div style={{
                     fontFamily: "'Space Mono', monospace",
-                    fontSize: '11px',
+                    fontSize: '14.5px',
                     color: '#7a756e', marginTop: '2px',
                   }}>
                     {desc}
@@ -241,15 +251,15 @@ export default function LandingPage() {
       {/* ── SECTION 2: HOW IT WORKS ─────────────────────────── */}
       <section
         style={{
-          background: "#f5f0e8",
-          padding: "60px 48px",
+          background: "#ede8dc",
+          padding: "76px 48px",
           borderTop: "1.5px solid #0f0e0d",
         }}
       >
         <div
           style={{
             fontFamily: "Space Mono",
-            fontSize: "10px",
+            fontSize: "13px",
             textTransform: "uppercase",
             letterSpacing: "0.14em",
             color: "#7a756e",
@@ -262,7 +272,7 @@ export default function LandingPage() {
           style={{
             fontFamily: "Instrument Serif",
             fontStyle: "italic",
-            fontSize: "32px",
+            fontSize: "44px",
             color: "#0f0e0d",
             marginBottom: "40px",
           }}
@@ -270,7 +280,7 @@ export default function LandingPage() {
           Three steps to 40 years of insight.
         </h2>
         <div
-          className="how-it-works"
+          className="how-it-works-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
@@ -317,7 +327,7 @@ export default function LandingPage() {
               <div
                 style={{
                   fontFamily: "Space Mono",
-                  fontSize: "12px",
+                  fontSize: "16px",
                   fontWeight: 700,
                   color: "#0f0e0d",
                   marginBottom: "8px",
@@ -328,7 +338,7 @@ export default function LandingPage() {
               <div
                 style={{
                   fontFamily: "Space Mono",
-                  fontSize: "10.5px",
+                  fontSize: "14.5px",
                   color: "#7a756e",
                   lineHeight: 1.75,
                 }}
@@ -344,14 +354,14 @@ export default function LandingPage() {
       <section
         style={{
           background: "#ede8dc",
-          padding: "60px 48px",
+          padding: "76px 48px",
           borderTop: "1.5px solid #0f0e0d",
         }}
       >
         <div
           style={{
             fontFamily: "Space Mono",
-            fontSize: "10px",
+            fontSize: "13px",
             textTransform: "uppercase",
             letterSpacing: "0.14em",
             color: "#7a756e",
@@ -364,7 +374,7 @@ export default function LandingPage() {
           style={{
             fontFamily: "Instrument Serif",
             fontStyle: "italic",
-            fontSize: "32px",
+            fontSize: "44px",
             color: "#0f0e0d",
             marginBottom: "40px",
           }}
@@ -372,7 +382,7 @@ export default function LandingPage() {
           Real-world use cases.
         </h2>
         <div
-          className="use-cases"
+          className="use-cases-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(2, 1fr)",
@@ -409,7 +419,7 @@ export default function LandingPage() {
               <div
                 style={{
                   fontFamily: "Space Mono",
-                  fontSize: "11px",
+                  fontSize: "16px",
                   fontWeight: 700,
                   color: "#0f0e0d",
                   marginBottom: "8px",
@@ -432,7 +442,7 @@ export default function LandingPage() {
               <div
                 style={{
                   fontFamily: "Space Mono",
-                  fontSize: "10.5px",
+                  fontSize: "14.5px",
                   color: "#7a756e",
                   lineHeight: 1.75,
                 }}
@@ -455,13 +465,13 @@ export default function LandingPage() {
           alignItems: "center",
           borderTop: "1.5px solid rgba(237,232,220,0.1)",
           fontFamily: "Space Mono",
-          fontSize: "10.5px",
+          fontSize: "13.5px",
           flexWrap: "wrap",
           gap: "16px",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <FaviconSVG size={16} />
+          <FaviconSVG size={19} />
           <span>Genome</span>
           <span style={{ color: "rgba(237,232,220,0.3)" }}>·</span>
           <span style={{ color: "rgba(237,232,220,0.45)" }}>
@@ -482,7 +492,7 @@ export default function LandingPage() {
             style={{
               color: "rgba(237,232,220,0.55)",
               textDecoration: "none",
-              fontSize: "10px",
+              fontSize: "12px",
               textTransform: "uppercase",
               letterSpacing: "0.1em",
             }}
@@ -494,14 +504,14 @@ export default function LandingPage() {
             style={{
               color: "rgba(237,232,220,0.55)",
               textDecoration: "none",
-              fontSize: "10px",
+              fontSize: "13px",
               textTransform: "uppercase",
               letterSpacing: "0.1em",
             }}
           >
             About
           </Link>
-          <span style={{ color: "rgba(237,232,220,0.25)", fontSize: "9px" }}>
+          <span style={{ color: "rgba(237,232,220,0.25)", fontSize: "12px" }}>
             Data: open-meteo.com
           </span>
         </div>
