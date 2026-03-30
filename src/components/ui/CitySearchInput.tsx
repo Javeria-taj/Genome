@@ -33,17 +33,22 @@ export default function CitySearchInput({ onSelect, placeholder = "Search city..
   // Debounced search
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    if (query.length < 3) { setResults([]); setOpen(false); return; }
+    if (!query.trim()) { setResults([]); setOpen(false); return; }
+
+    const q = query.trim().toLowerCase();
+    const cached = GEO_CACHE.get(q);
+
+    // Synchronous immediate cache check (0ms delay)
+    if (cached && Date.now() - cached.ts < GEO_CACHE_TTL) {
+      setResults(cached.data as Result[]);
+      setOpen(true);
+      return;
+    }
+
+    // Otherwise debounce the API call (30ms delay)
     debounceRef.current = setTimeout(async () => {
       setLoading(true);
       try {
-        const q = query.trim().toLowerCase();
-        const cached = GEO_CACHE.get(q);
-        if (cached && Date.now() - cached.ts < GEO_CACHE_TTL) {
-          setResults(cached.data as Result[]);
-          setOpen(true);
-          return;
-        }
         const res = await axios.get(
           `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&format=json`
         );
@@ -53,7 +58,7 @@ export default function CitySearchInput({ onSelect, placeholder = "Search city..
         setOpen(true);
       } catch { setResults([]); }
       finally { setLoading(false); }
-    }, 700);
+    }, 500);
   }, [query]);
 
   // Close on outside click

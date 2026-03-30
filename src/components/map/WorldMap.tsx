@@ -61,6 +61,10 @@ const AQI_CACHE_TTL = 30 * 60 * 1000;
 const WEATHER_CACHE = new Map<string, { result: number | null; ts: number }>();
 const WEATHER_CACHE_TTL = 15 * 60 * 1000; // 15 mins for current weather // 1 hour
 
+// ─── Search cache (1h TTL) ───────────────────────────────────────────────────
+const GEO_SEARCH_CACHE = new Map<string, { results: any[]; ts: number }>();
+const GEO_SEARCH_CACHE_TTL = 60 * 60 * 1000;
+
 async function _fetchAQIRaw(lat: number, lng: number) {
   const res = await fetch(
     "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=" + lat + "&longitude=" + lng + "&hourly=european_aqi&timezone=auto&forecast_days=1"
@@ -112,20 +116,20 @@ const reverseGeocode = async (lat: number, lng: number): Promise<Omit<LocationIn
   );
   const data = await res.json();
   const addr = data.address || {};
-  
+
   // Exhaustive fallback for city/region name
   const city =
-    addr.city || 
-    addr.town || 
-    addr.village || 
-    addr.municipality || 
-    addr.suburb || 
-    addr.hamlet || 
+    addr.city ||
+    addr.town ||
+    addr.village ||
+    addr.municipality ||
+    addr.suburb ||
+    addr.hamlet ||
     addr.neighbourhood ||
     addr.quarter ||
     addr.city_district ||
-    addr.county || 
-    addr.state_district || 
+    addr.county ||
+    addr.state_district ||
     addr.state ||
     `Point ${lat.toFixed(2)}, ${lng.toFixed(2)}`;
 
@@ -199,6 +203,16 @@ export default function WorldMap({ onPinsChange }: { onPinsChange?: (count: numb
     } catch { /* unauthenticated or no pins */ }
   };
 
+  useEffect(() => { fetchPins(); }, []);
+
+  // Re-center map and load info when coords change (e.g. from Sidebar)
+  useEffect(() => {
+    if (selectedCoords) {
+      setMapCenter([selectedCoords.lat, selectedCoords.lng]);
+      handleLoadLocation(selectedCoords.lat, selectedCoords.lng);
+    }
+  }, [selectedCoords]);
+
   // ── Load location info after coord change ──
   const handleLoadLocation = async (lat: number, lng: number) => {
     setLocationLoading(true);
@@ -218,7 +232,7 @@ export default function WorldMap({ onPinsChange }: { onPinsChange?: (count: numb
   // Called from MapPrimitive on map click
   const handleMapClick = async (lat: number, lng: number) => {
     setSelectedCoords({ lat, lng });
-    await handleLoadLocation(lat, lng);
+
   };
 
   // ── Save pin ──
@@ -299,7 +313,9 @@ export default function WorldMap({ onPinsChange }: { onPinsChange?: (count: numb
   };
 
   const fetchSuggestions = async (q: string) => {
-    if (q.trim().length < 2) { setSuggestions([]); setShowSuggestions(false); setNoResults(false); return; }
+    const queryTerm = q.trim().toLowerCase();
+    if (queryTerm.length < 1) { setSuggestions([]); setShowSuggestions(false); setNoResults(false); return; }
+
     setIsSearching(true);
     setNoResults(false);
     try {
@@ -307,6 +323,7 @@ export default function WorldMap({ onPinsChange }: { onPinsChange?: (count: numb
       if (results.length === 0) {
         results = await fetchFromNominatim(q);
       }
+      GEO_SEARCH_CACHE.set(queryTerm, { results, ts: Date.now() });
       setSuggestions(results);
       setShowSuggestions(true);
       setNoResults(results.length === 0);
@@ -319,7 +336,24 @@ export default function WorldMap({ onPinsChange }: { onPinsChange?: (count: numb
     const val = e.target.value;
     setQuery(val);
     clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => fetchSuggestions(val), 280);
+
+    if (!val.trim()) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    // Immediate Cache Look-up (0ms delay)
+    const cached = GEO_SEARCH_CACHE.get(val.trim().toLowerCase());
+    if (cached && Date.now() - cached.ts < GEO_SEARCH_CACHE_TTL) {
+      setSuggestions(cached.results);
+      setShowSuggestions(true);
+      setNoResults(cached.results.length === 0);
+      return;
+    }
+
+    // Debounced search (30ms delay)
+    debounceRef.current = setTimeout(() => fetchSuggestions(val), 500);
   };
 
   const getSuggestionCity = (s: NominatimResult) => {
@@ -379,17 +413,17 @@ export default function WorldMap({ onPinsChange }: { onPinsChange?: (count: numb
           </div>
           {/* Scientific Overlay when loading */}
           {pulsePin && (
-            <div 
-              className="ripple" 
-              style={{ 
-                position: 'absolute', 
-                top: '50%', left: '50%', 
-                width: '100px', height: '100px', 
-                border: '2px solid var(--accent)', 
+            <div
+              className="ripple"
+              style={{
+                position: 'absolute',
+                top: '50%', left: '50%',
+                width: '100px', height: '100px',
+                border: '2px solid var(--accent)',
                 borderRadius: '50%',
-                zIndex: 2000, 
-                pointerEvents: 'none' 
-              }} 
+                zIndex: 2000,
+                pointerEvents: 'none'
+              }}
             />
           )}
         </div>

@@ -20,7 +20,10 @@ export async function GET() {
     try {
       await fetch(
         'https://archive-api.open-meteo.com/v1/archive?latitude=52.52&longitude=13.41&start_date=2024-01-01&end_date=2024-01-01&daily=temperature_2m_max',
-        { signal: controller.signal }
+        {
+          signal: controller.signal,
+          next: { revalidate: 60 }
+        }
       );
       latencyStr = `${Date.now() - start}ms`;
     } catch (e: any) {

@@ -48,30 +48,32 @@ export default function Topbar() {
     <div className="tb no-print">
       {/* Logo */}
       <Link href="/dashboard" className="tb-logo" style={{ textDecoration: "none", color: "inherit" }}>
-        <svg width="18" height="18" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }} className="tb-logo-svg">
+        <svg width="24" height="24" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }} className="tb-logo-svg">
           <defs>
             <radialGradient id="fg" cx="35%" cy="32%" r="60%">
               <stop offset="0%" stopColor="#2c8fb5"/>
               <stop offset="70%" stopColor="#0e4d68"/>
               <stop offset="100%" stopColor="#072d3f"/>
             </radialGradient>
-            <clipPath id="fc"><circle cx="16" cy="16" r="11" transform="rotate(-23.5,16,16)"/></clipPath>
+            <clipPath id="fc"><circle cx="16" cy="16" r="13" transform="rotate(-23.5,16,16)"/></clipPath>
           </defs>
           <style>{`
             @keyframes rotateLogo { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+            @keyframes logoIdle { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+            .tb-logo-svg { animation: logoIdle 60s linear infinite; }
             .tb-logo:hover .tb-logo-svg { animation: rotateLogo 8s linear infinite; }
             .tb-logo:hover .tb-logo-orbit { stroke: var(--accent); opacity: 0.6; }
           `}</style>
-          <ellipse cx="16" cy="16" rx="13.5" ry="13" fill="none" stroke="rgba(200,160,60,0.38)" strokeWidth="1.2" strokeDasharray="5 3" transform="rotate(-20,16,16)" className="tb-logo-orbit" style={{ transition: 'all 0.3s' }}/>
-          <circle cx="16" cy="16" r="11" fill="url(#fg)" style={{ stroke: "rgba(15,14,13,0.32)", strokeWidth: "0.8" }} />
+          <ellipse cx="16" cy="16" rx="14.5" ry="14" fill="none" stroke="rgba(200,160,60,0.38)" strokeWidth="1.2" strokeDasharray="5 3" transform="rotate(-20,16,16)" className="tb-logo-orbit" style={{ transition: 'all 0.3s' }}/>
+          <circle cx="16" cy="16" r="13" fill="url(#fg)" style={{ stroke: "rgba(15,14,13,0.32)", strokeWidth: "0.8" }} />
           <g clipPath="url(#fc)" stroke="none" fill="rgba(52,130,78,0.72)">
             <ellipse cx="12" cy="13" rx="4" ry="3" transform="rotate(-10,12,13)"/>
             <ellipse cx="20" cy="18" rx="3.5" ry="4" transform="rotate(8,20,18)"/>
             <ellipse cx="10" cy="20" rx="2.2" ry="2"/>
           </g>
-          <circle cx="16" cy="16" r="11" fill="none" stroke="rgba(100,190,230,0.3)" strokeWidth="2.5" transform="rotate(-23.5,16,16)"/>
-          <circle cx="16" cy="16" r="11" fill="none" stroke="rgba(100,190,230,0.08)" strokeWidth="5" transform="rotate(-23.5,16,16)"/>
-          <ellipse cx="16" cy="16" rx="13.5" ry="13" fill="none" stroke="rgba(212,168,60,0.9)" strokeWidth="1.8" strokeDasharray="5 3" transform="rotate(-20,16,16)" clipPath="url(#fc)"/>
+          <circle cx="16" cy="16" r="13" fill="none" stroke="rgba(100,190,230,0.3)" strokeWidth="2.5" transform="rotate(-23.5,16,16)"/>
+          <circle cx="16" cy="16" r="13" fill="none" stroke="rgba(100,190,230,0.08)" strokeWidth="5" transform="rotate(-23.5,16,16)"/>
+          <ellipse cx="16" cy="16" rx="14.5" ry="14" fill="none" stroke="rgba(212,168,60,0.9)" strokeWidth="1.8" strokeDasharray="5 3" transform="rotate(-20,16,16)" clipPath="url(#fc)"/>
         </svg>
         Genome
       </Link>

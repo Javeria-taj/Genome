@@ -70,7 +70,13 @@ export default function MobileBottomNav() {
             className={`mobile-nav-item${isActive ? " active" : ""}`}
             style={{ textDecoration: "none" }}
           >
-            {item.icon}
+            <div className="mobile-nav-icon-wrap" style={{ 
+              transition: "transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
+              transform: isActive ? "scale(1.2) translateY(-2px)" : "scale(1)",
+              display: "flex", alignItems: "center", justifyContent: "center"
+            }}>
+              {item.icon}
+            </div>
             {item.label}
           </Link>
         );

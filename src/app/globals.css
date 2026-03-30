@@ -2071,7 +2071,7 @@ button:hover .btn-arrow {
 @media (max-width: 640px) {
 
   /* Dashboard grid → single column */
-  .content-grid {
+  .content-grid, .panel-grid {
     grid-template-columns: 1fr !important;
   }
   .map-wrap {
@@ -2080,6 +2080,7 @@ button:hover .btn-arrow {
   }
   .panel {
     border-right: none !important;
+    border-bottom: var(--b1) !important;
   }
 
   /* Topbar */
@@ -2087,7 +2088,31 @@ button:hover .btn-arrow {
   .tb-btn:not(.tb-btn-keep) { display: none !important; }
 
   /* Sidebar → hide entirely */
-  .sidebar { display: none !important; }
+  .sb:not(.mobile-open) { display: none !important; }
+  .sb.mobile-open {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 56px;
+    width: 260px !important;
+    z-index: 1000;
+    border-right: var(--b2);
+    display: flex !important;
+  }
+  .sb-backdrop {
+    display: block !important;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .sb-backdrop.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
 
   /* Bottom nav bar → show */
   .mobile-bottom-nav { display: flex !important; }
@@ -2109,8 +2134,20 @@ button:hover .btn-arrow {
   }
 
   /* Page header */
-  .ph { flex-direction: column; gap: 4px; }
-  .ph-title { font-size: 18px !important; }
+  .ph { 
+    flex-direction: column; 
+    align-items: flex-start; 
+    gap: 8px; 
+    padding: 12px 14px;
+    border-bottom: var(--b2);
+  }
+  .ph-title { 
+    font-size: 22px !important; 
+    line-height: 1.2;
+  }
+  .ph-sub {
+    font-size: 8.5px;
+  }
 
   /* Location info card → REMOVED CONFLICTING GRID to support premium horizontal scroll */
 
@@ -2198,4 +2235,10 @@ button:hover .btn-arrow {
   width: 16px;
   height: 16px;
 }
+
+@keyframes breathe {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.15); }
+}
+.breathe { animation: breathe 3s infinite ease-in-out; }
 
