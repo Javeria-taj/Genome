@@ -137,8 +137,19 @@ export default function BrutalistEarth() {
           .attr("repeatCount", "indefinite");
 
         let rotation = 0;
+        let scrollY = 0;
+
+        const handleScroll = () => {
+          scrollY = window.scrollY;
+        };
+        window.addEventListener("scroll", handleScroll, { passive: true });
+
         const timer = d3.timer((elapsed) => {
-          rotation = elapsed * 0.015;
+          // Base rotation + scroll-based offset
+          const baseRotation = elapsed * 0.015;
+          const scrollRotation = scrollY * 0.12;
+          rotation = baseRotation + scrollRotation;
+          
           projection.rotate([rotation, -15]); 
           
           waterPath.attr("d", path as any);
@@ -146,7 +157,10 @@ export default function BrutalistEarth() {
           landGroup.selectAll(".land").attr("d", path as any);
         });
 
-        return () => timer.stop();
+        return () => {
+          timer.stop();
+          window.removeEventListener("scroll", handleScroll);
+        };
       }).catch(err => console.error("Could not load topology data", err));
   }, []);
 

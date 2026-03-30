@@ -55,8 +55,11 @@ const HighlightMatch = ({ text, query }: { text: string; query: string }) => {
 // ─── Module-level AQI cache (1h TTL) ────────────────────────────────────────
 // Keyed by lat/lng rounded to 2dp (~1km precision). Prevents repeat AQI calls
 // when the user clicks the same area multiple times or re-selects a city.
-const AQI_CACHE = new Map<string, { result: Awaited<ReturnType<typeof _fetchAQIRaw>>; ts: number }>();
-const AQI_CACHE_TTL = 60 * 60 * 1000; // 1 hour
+const AQI_CACHE = new Map<string, { result: any; ts: number }>();
+const AQI_CACHE_TTL = 30 * 60 * 1000;
+
+const WEATHER_CACHE = new Map<string, { result: number | null; ts: number }>();
+const WEATHER_CACHE_TTL = 15 * 60 * 1000; // 15 mins for current weather // 1 hour
 
 async function _fetchAQIRaw(lat: number, lng: number) {
   const res = await fetch(
@@ -81,30 +84,72 @@ const fetchAQI = async (lat: number, lng: number) => {
   }
 };
 
+async function _fetchWeatherRaw(lat: number, lng: number): Promise<number | null> {
+  const res = await fetch(
+    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true`
+  );
+  const data = await res.json();
+  return data.current_weather?.temperature ?? null;
+}
+
+const fetchWeather = async (lat: number, lng: number) => {
+  const key = `${lat.toFixed(2)},${lng.toFixed(2)}`;
+  const cached = WEATHER_CACHE.get(key);
+  if (cached && Date.now() - cached.ts < WEATHER_CACHE_TTL) return cached.result;
+  try {
+    const result = await _fetchWeatherRaw(lat, lng);
+    WEATHER_CACHE.set(key, { result, ts: Date.now() });
+    return result;
+  } catch {
+    return null;
+  }
+};
+
 const reverseGeocode = async (lat: number, lng: number): Promise<Omit<LocationInfo, "aqi" | "aqiLabel" | "aqiColor">> => {
   const res = await fetch(
-    "https://nominatim.openstreetmap.org/reverse?lat=" + lat + "&lon=" + lng + "&format=json&zoom=10",
+    "https://nominatim.openstreetmap.org/reverse?lat=" + lat + "&lon=" + lng + "&format=json&zoom=10&extratags=1",
     { headers: { "Accept-Language": "en" } }
   );
   const data = await res.json();
   const addr = data.address || {};
+  
+  // Exhaustive fallback for city/region name
   const city =
-    addr.city || addr.town || addr.village || addr.county || addr.state_district || "Unknown location";
+    addr.city || 
+    addr.town || 
+    addr.village || 
+    addr.municipality || 
+    addr.suburb || 
+    addr.hamlet || 
+    addr.neighbourhood ||
+    addr.quarter ||
+    addr.city_district ||
+    addr.county || 
+    addr.state_district || 
+    addr.state ||
+    `Point ${lat.toFixed(2)}, ${lng.toFixed(2)}`;
+
+  const state = addr.state || addr.province || addr.region || addr.state_district || "";
   const country = addr.country || "";
   const countryCode = (addr.country_code || "").toUpperCase();
-  const displayName = city + ", " + countryCode;
+  const displayName = city + (state ? ", " + state : "") + ", " + countryCode;
   const timezone = data.extratags?.timezone || "UTC";
-  return { city, country, countryCode, displayName, timezone, lat, lng };
+  return { city, state, country, countryCode, displayName, timezone, lat, lng, currentTemp: null };
 };
 
 async function loadLocationInfo(lat: number, lng: number): Promise<LocationInfo> {
-  const [geo, aqiData] = await Promise.all([reverseGeocode(lat, lng), fetchAQI(lat, lng)]);
+  const [geo, aqiData, currentTemp] = await Promise.all([
+    reverseGeocode(lat, lng),
+    fetchAQI(lat, lng),
+    fetchWeather(lat, lng),
+  ]);
   return {
     ...geo,
     timezone: aqiData.timezone || geo.timezone,
     aqi: aqiData.aqi,
     aqiLabel: aqiData.label,
     aqiColor: aqiData.color,
+    currentTemp,
   };
 }
 
@@ -157,6 +202,8 @@ export default function WorldMap({ onPinsChange }: { onPinsChange?: (count: numb
   // ── Load location info after coord change ──
   const handleLoadLocation = async (lat: number, lng: number) => {
     setLocationLoading(true);
+    setPulsePin(true);
+    setTimeout(() => setPulsePin(false), 800);
     try {
       const info = await loadLocationInfo(lat, lng);
       setSelectedLocation(info);
@@ -330,6 +377,21 @@ export default function WorldMap({ onPinsChange }: { onPinsChange?: (count: numb
               isDark={isDark}
             />
           </div>
+          {/* Scientific Overlay when loading */}
+          {pulsePin && (
+            <div 
+              className="ripple" 
+              style={{ 
+                position: 'absolute', 
+                top: '50%', left: '50%', 
+                width: '100px', height: '100px', 
+                border: '2px solid var(--accent)', 
+                borderRadius: '50%',
+                zIndex: 2000, 
+                pointerEvents: 'none' 
+              }} 
+            />
+          )}
         </div>
 
         {/* Search Input with Autocomplete */}

@@ -90,7 +90,7 @@ export default function ResetPasswordPage({ params }: { params: { token: string 
         </form>
 
         <div className="form-footer">
-          <span>Genome v3.4 &middot; Next.js + MongoDB</span>
+          <span>&copy; 2026 Genome &middot; Built by Javeria Taj</span>
         </div>
       </div>
     </div>

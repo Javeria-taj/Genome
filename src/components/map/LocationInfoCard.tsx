@@ -59,16 +59,14 @@ export default function LocationInfoCard() {
       borderTop: "none",
       background: "var(--paper)",
       animation: "slideDown 0.25s ease-out",
+      display: "flex",
+      overflowX: "auto",
+      width: "100%",
+      msOverflowStyle: "none", // Hide scrollbar for IE/Edge
+      scrollbarWidth: "none",  // Hide scrollbar for Firefox
     }}>
-      {/* City + Country */}
-      <div style={{ borderRight: "1px solid var(--ink)", padding: "10px 16px" }}>
-        <div className="lic-label">Location</div>
-        <div className="lic-city">{selectedLocation.city}</div>
-        <div className="lic-country">{selectedLocation.country} · {selectedLocation.countryCode}</div>
-      </div>
-
-      {/* AQI */}
       <style>{`
+        .location-info-card::-webkit-scrollbar { display: none; }
         @keyframes breathAlert {
           0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(200,50,50,0)); }
           50% { transform: scale(1.08); filter: drop-shadow(0 0 6px rgba(200,50,50,0.4)); }
@@ -78,8 +76,27 @@ export default function LocationInfoCard() {
           display: inline-block;
           transform-origin: left center;
         }
+        .lic-section {
+          flex: 1 0 160px;
+          border-right: 1px solid var(--ink);
+          padding: 10px 16px;
+        }
+        .lic-section:last-child {
+          border-right: none;
+        }
       `}</style>
-      <div style={{ borderRight: "1px solid var(--ink)", padding: "10px 16px" }}>
+
+      {/* City + Country */}
+      <div className="lic-section" style={{ minWidth: "160px" }}>
+        <div className="lic-label">Location</div>
+        <div className="lic-city" style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+          {selectedLocation.city}{selectedLocation.state ? `, ${selectedLocation.state}` : ""}
+        </div>
+        <div className="lic-country">{selectedLocation.country} · {selectedLocation.countryCode}</div>
+      </div>
+
+      {/* Air Quality */}
+      <div className="lic-section">
         <div className="lic-label">Air Quality</div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
           <div className={`lic-aqi-val ${selectedLocation.aqi && selectedLocation.aqi > 80 ? 'breath-alert' : ''}`} style={{ color: selectedLocation.aqiColor }}>
@@ -91,15 +108,28 @@ export default function LocationInfoCard() {
         </div>
       </div>
 
+      {/* Current Temp */}
+      <div className="lic-section">
+        <div className="lic-label">Current Temp</div>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+          <div className="lic-aqi-val" style={{ color: 'var(--accent)' }}>
+            {selectedLocation.currentTemp !== null ? `${selectedLocation.currentTemp.toFixed(1)}°C` : "—"}
+          </div>
+          <div className="lic-aqi-label" style={{ color: 'var(--dim)' }}>
+            Real-time
+          </div>
+        </div>
+      </div>
+
       {/* Local Time */}
-      <div style={{ borderRight: "1px solid var(--ink)", padding: "10px 16px" }}>
+      <div className="lic-section">
         <div className="lic-label">Local Time</div>
         <div className="lic-time">{localTime || "—:—"}</div>
         <div className="lic-timezone">{tz}</div>
       </div>
 
       {/* Coordinates */}
-      <div style={{ padding: "10px 16px" }}>
+      <div className="lic-section">
         <div className="lic-label">Coordinates</div>
         <div className="lic-coord">
           {Math.abs(selectedCoords.lat).toFixed(4)}° {selectedCoords.lat >= 0 ? "N" : "S"}

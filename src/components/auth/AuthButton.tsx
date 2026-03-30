@@ -73,20 +73,21 @@ export default function AuthButton({
 
 function LoadingDots() {
   return (
-    <span style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+    <svg width="24" height="6" viewBox="0 0 24 6" xmlns="http://www.w3.org/2000/svg">
       {[0, 1, 2].map(i => (
-        <span
+        <circle
           key={i}
+          cx={3 + i * 9}
+          cy="3"
+          r="2.5"
+          fill="var(--paper)"
           style={{
-            width: '5px',
-            height: '5px',
-            background: 'var(--paper)',
-            borderRadius: '50%',
-            animation: `dotBounce 1.2s ${i * 0.2}s ease-in-out infinite`,
+            animation: `dotBounce 1.4s ${i * 0.2}s infinite ease-in-out`,
+            transformOrigin: 'center',
           }}
         />
       ))}
-    </span>
+    </svg>
   );
 }
 

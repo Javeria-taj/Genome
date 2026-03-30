@@ -178,7 +178,7 @@ export default function LoginForm() {
       </div>
 
       <div className="form-footer">
-        <span>Genome v3.3 &middot; Next.js + MongoDB</span>
+        <span>&copy; 2026 Genome &middot; Built by Javeria Taj</span>
       </div>
 
       {forgotOpen && (

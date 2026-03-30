@@ -11,9 +11,11 @@ export interface LocationInfo {
   countryCode: string;
   displayName: string;  // e.g. "Mumbai, IN"
   timezone: string;
+  state: string;
   aqi: number | null;
   aqiLabel: string;
   aqiColor: string;
+  currentTemp: number | null;
 }
 
 interface CoordinateContextType {

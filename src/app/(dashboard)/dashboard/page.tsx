@@ -16,8 +16,8 @@ export default function DashboardPage() {
     selectedCoords?.lng ?? null,
   );
 
-  const warmest = data?.reduce((a, b) => (a.avgTemp > b.avgTemp ? a : b));
-  const wettest = data?.reduce((a, b) => (a.totalPrecip > b.totalPrecip ? a : b));
+  const warmest = data && data.length > 0 ? data.reduce((a, b) => (a.avgTemp > b.avgTemp ? a : b)) : null;
+  const wettest = data && data.length > 0 ? data.reduce((a, b) => (a.totalPrecip > b.totalPrecip ? a : b)) : null;
   const trend = data && data.length >= 2
     ? (data[data.length - 1].avgTemp - data[0].avgTemp).toFixed(1)
     : null;
@@ -37,12 +37,32 @@ export default function DashboardPage() {
   const heatPath = data ? makeSparkline(data.map(d => d.extremeHeatDays), 100, 20) : "";
   const rainPath = data ? makeSparkline(data.map(d => d.extremeRainDays), 100, 20) : "";
 
+  const getAiSynopsis = () => {
+    if (!data || data.length < 2) return null;
+    const firstDecade = data.slice(0, 10);
+    const lastDecade = data.slice(-10);
+    const firstAvg = firstDecade.reduce((s, d) => s + d.avgTemp, 0) / firstDecade.length;
+    const lastAvg = lastDecade.reduce((s, d) => s + d.avgTemp, 0) / lastDecade.length;
+    const diff = (lastAvg - firstAvg).toFixed(2);
+    const multiplier = (parseFloat(diff) / 0.8).toFixed(1); // Compared to ~0.8C global avg since 1980s
+
+    if (parseFloat(diff) > 1.2) {
+      return `Critical thermal shift: This region has warmed by ${diff}\u00b0C since the 1980s, approximately ${multiplier}x the global average rate.`;
+    } else if (parseFloat(diff) > 0.5) {
+      return `Significant warming detected: A ${diff}\u00b0C rise in mean temperature suggests steady climatic drift over 40 years.`;
+    }
+    return `Stable thermal profile: 40-year variance remains within ${diff}\u00b0C, suggesting localized resilience compared to global trends.`;
+  };
+
+  const synopsis = getAiSynopsis();
+
+
   return (
     <>
       {/* Page header */}
       <div className="ph">
         <div>
-          <div className="ph-title">GeoScience Dashboard</div>
+          <div className="ph-title">Genome Dashboard</div>
           <div className="ph-sub" style={{ marginTop: 2 }}>Overview — 40yr Climate Analysis</div>
         </div>
         <div style={{ fontSize: 10, color: "var(--dim)", letterSpacing: "0.06em", fontFamily: "var(--mono)" }}>
@@ -58,7 +78,11 @@ export default function DashboardPage() {
 
       <div className="panel-grid">
         {/* MAP — full width */}
-        <div className="panel panel-full map-wrap">
+        <div className="panel panel-full map-wrap" style={{ position: "relative", overflow: "hidden" }}>
+          <div className="scanline" />
+          <div style={{ position: "absolute", top: 8, right: 12, fontSize: 8, color: "var(--dim)", zIndex: 5, letterSpacing: ".1em", opacity: 0.5 }}>
+            [0.1] SCANNING_MAP_SURFACE
+          </div>
           <div className="phead">
             <span className="ptitle">Interactive World Map</span>
             <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
@@ -70,7 +94,11 @@ export default function DashboardPage() {
         </div>
 
         {/* CLIMATE TRENDS */}
-        <div className="panel">
+        <div className="panel" style={{ position: "relative", overflow: "hidden" }}>
+          <div className="scanline" style={{ animationDuration: '12s', height: '60px' }} />
+          <div style={{ position: "absolute", top: 8, right: 12, fontSize: 8, color: "var(--dim)", zIndex: 5, opacity: 0.5 }}>
+            TELEMETRY_REF_TR-09
+          </div>
           <div className="phead">
             <span className="ptitle">40-Year Climate Trends</span>
             <span className="ptag">Chart.js</span>
@@ -86,7 +114,7 @@ export default function DashboardPage() {
               <div style={{ border: "1px solid var(--red)", padding: "6px 10px", fontSize: 9, color: "var(--red)" }}>
                 API error — check network
               </div>
-            ) : data ? (
+            ) : data && data.length > 0 ? (
               <>
                 <div style={{ fontSize: 8.5, color: "var(--dim)", marginBottom: 8 }}>
                   {locationLabel || "Selected location"} &nbsp;·&nbsp; 1985–2024 &nbsp;·&nbsp; temp + precipitation
@@ -120,10 +148,17 @@ export default function DashboardPage() {
         </div>
 
         {/* QUICK STATS */}
-        <div className="panel">
+        <div className="panel" style={{ position: "relative", overflow: "hidden" }}>
+          <div className="scanline" style={{ animationDuration: '15s', animationDelay: '2s' }} />
+          <div style={{ position: "absolute", bottom: 8, right: 12, fontSize: 8, color: "var(--dim)", zIndex: 5, opacity: 0.5 }}>
+            COORD: {selectedCoords ? `${selectedCoords.lat.toFixed(2)}, ${selectedCoords.lng.toFixed(2)}` : "STANDBY"}
+          </div>
           <div className="phead">
             <span className="ptitle">Location Summary</span>
-            <span className="ptag">Live</span>
+            <span className="ptag" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <span className="breathe" style={{ width: '4px', height: '4px', background: 'var(--accent)', borderRadius: '50%' }} />
+              Live
+            </span>
           </div>
           <div className="pbody">
             {!selectedCoords ? (
@@ -134,9 +169,29 @@ export default function DashboardPage() {
               <SkeletonLoader variant="stat" />
             ) : data ? (
               <>
-                <div style={{ fontSize: 8.5, color: "var(--dim)", marginBottom: 8 }}>
+                <div style={{ fontSize: "11px", color: "var(--dim)", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   Extreme events tracked across 40 years
                 </div>
+                
+                {synopsis && (
+                  <div style={{ 
+                    background: "rgba(181, 69, 27, 0.05)", 
+                    border: "1px solid var(--accent)", 
+                    padding: "10px", 
+                    marginBottom: "16px",
+                    fontSize: "14px",
+                    lineHeight: "1.6",
+                    color: "var(--ink)",
+                    fontFamily: "var(--mono)",
+                    position: "relative"
+                  }}>
+                    <div style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: ".12em", color: "var(--accent)", marginBottom: "6px", fontWeight: "bold" }}>
+                      [ GENOME_INSIGHT_V1.0 ]
+                    </div>
+                    {synopsis}
+                  </div>
+                )}
+
                 <div className="stat-row">
                   <div className="sc" style={{ position: "relative", overflow: "hidden" }}>
                     {/* Heat wave animation */}

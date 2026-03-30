@@ -48,7 +48,7 @@ export default function Topbar() {
     <div className="tb no-print">
       {/* Logo */}
       <Link href="/dashboard" className="tb-logo" style={{ textDecoration: "none", color: "inherit" }}>
-        <svg width="18" height="18" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+        <svg width="18" height="18" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }} className="tb-logo-svg">
           <defs>
             <radialGradient id="fg" cx="35%" cy="32%" r="60%">
               <stop offset="0%" stopColor="#2c8fb5"/>
@@ -57,8 +57,13 @@ export default function Topbar() {
             </radialGradient>
             <clipPath id="fc"><circle cx="16" cy="16" r="11" transform="rotate(-23.5,16,16)"/></clipPath>
           </defs>
-          <ellipse cx="16" cy="16" rx="13.5" ry="13" fill="none" stroke="rgba(200,160,60,0.38)" strokeWidth="1.2" strokeDasharray="5 3" transform="rotate(-20,16,16)"/>
-          <circle cx="16" cy="16" r="11" fill="url(#fg)" transform="rotate(-23.5,16,16)"/>
+          <style>{`
+            @keyframes rotateLogo { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+            .tb-logo:hover .tb-logo-svg { animation: rotateLogo 8s linear infinite; }
+            .tb-logo:hover .tb-logo-orbit { stroke: var(--accent); opacity: 0.6; }
+          `}</style>
+          <ellipse cx="16" cy="16" rx="13.5" ry="13" fill="none" stroke="rgba(200,160,60,0.38)" strokeWidth="1.2" strokeDasharray="5 3" transform="rotate(-20,16,16)" className="tb-logo-orbit" style={{ transition: 'all 0.3s' }}/>
+          <circle cx="16" cy="16" r="11" fill="url(#fg)" style={{ stroke: "rgba(15,14,13,0.32)", strokeWidth: "0.8" }} />
           <g clipPath="url(#fc)" stroke="none" fill="rgba(52,130,78,0.72)">
             <ellipse cx="12" cy="13" rx="4" ry="3" transform="rotate(-10,12,13)"/>
             <ellipse cx="20" cy="18" rx="3.5" ry="4" transform="rotate(8,20,18)"/>
@@ -137,11 +142,11 @@ export default function Topbar() {
 
         {/* API status */}
         <button className="tb-btn" style={{ cursor: "default", display: "flex", gap: "6px" }} title="System Health Monitoring">
-          <div className="status-pip" style={{
+          <div className={`status-pip ${health.status === 'operational' ? 'breathe' : ''}`} style={{
             background: health.status === 'operational' ? '#2ecc71' : 
                         health.status === 'unstable' ? '#e74c3c' : '#f1c40f',
-            boxShadow: health.status === 'operational' ? '0 0 6px #2ecc71' : 'none',
-            animation: health.status === 'checking' ? 'pulse 1s infinite' : 'none',
+            boxShadow: health.status === 'operational' ? '0 0 4px #2ecc71' : 'none',
+            animation: health.status === 'checking' ? 'pulse 1s infinite' : undefined,
           }} />
           <span style={{ fontSize: '10px' }}>
             {health.status === 'operational' 

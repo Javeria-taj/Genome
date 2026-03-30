@@ -118,7 +118,7 @@ export default function RegisterForm() {
       </form>
 
       <div className="form-footer">
-        <span>Genome v3.3 · Next.js + MongoDB</span>
+        <span>&copy; 2026 Genome &middot; Built by Javeria Taj</span>
       </div>
     </div>
   );

@@ -150,9 +150,8 @@ export default function PrintPage() {
         </div>
 
         {/* Footer */}
-        <div style={{ borderTop: "1px solid #0f0e0d", paddingTop: 10, marginTop: "auto", display: "flex", justifyContent: "space-between", fontSize: 8, color: "#7a756e" }}>
-          <span>Data source: Open-Meteo Historical Weather API · archive-api.open-meteo.com</span>
-          <span>Genome v3.0 · Next.js + MongoDB</span>
+        <div className="form-footer" style={{ borderTop: "1.5px solid #0f0e0d", marginTop: 20, paddingTop: 14 }}>
+          <span>&copy; 2026 Genome &middot; Built by Javeria Taj</span>
         </div>
       </div>
     </div>

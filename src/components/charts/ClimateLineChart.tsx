@@ -124,18 +124,57 @@ export default function ClimateLineChart({ data }: Props) {
     },
   };
 
-  const labels = data.map(d => d.year.toString());
-  const temps = data.map(d => d.avgTemp);
-  const precips = data.map(d => d.totalPrecip);
+  const labels = (data || []).map(d => d.year.toString());
+  const temps = (data || []).map(d => d.avgTemp);
+  const precips = (data || []).map(d => d.totalPrecip);
 
   const inkColor = isDark ? "#ede8dc" : "#0f0e0d";
   const dimColor = isDark ? "#8a8278" : "#7a756e";
   const paperColor = isDark ? "#1c1a17" : "#f5f0e8";
   const gridColor = isDark ? "rgba(237,232,220,0.10)" : "rgba(15,14,13,0.10)";
   const accentColor = isDark ? "#d4672a" : "#b5451b";
-  const accentGlow = isDark ? "rgba(212,103,42,0.08)" : "rgba(181,69,27,0.07)";
+  const accentGlow = isDark ? "rgba(212,103,42,0.12)" : "rgba(181,69,27,0.10)";
   const blueColor = isDark ? "#4d7ff0" : "#2259c7";
-  const blueGlow = isDark ? "rgba(77,127,240,0.08)" : "rgba(34,89,199,0.06)";
+  const blueGlow = isDark ? "rgba(77,127,240,0.12)" : "rgba(34,89,199,0.08)";
+
+  const chartData = {
+    labels,
+    datasets: [
+      {
+        label: "Avg Temp",
+        data: temps,
+        borderColor: accentColor,
+        backgroundColor: accentGlow,
+        fill: true,
+        pointBackgroundColor: accentColor,
+        pointBorderColor: paperColor,
+        pointBorderWidth: 1.5,
+        borderWidth: 2,
+        tension: 0.35,
+        yAxisID: "y",
+        pointHitRadius: 12,
+        pointRadius: 4,
+        pointHoverRadius: 7,
+      },
+      {
+        label: "Precip",
+        data: precips,
+        borderColor: blueColor,
+        backgroundColor: blueGlow,
+        fill: true,
+        borderDash: [4, 2],
+        pointBackgroundColor: blueColor,
+        pointBorderColor: paperColor,
+        pointBorderWidth: 1,
+        borderWidth: 1.5,
+        tension: 0.35,
+        yAxisID: "y1",
+        pointHitRadius: 12,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+      },
+    ],
+  };
 
   const options: ChartOptions<"line"> = {
     responsive: true,
@@ -162,7 +201,13 @@ export default function ClimateLineChart({ data }: Props) {
         callbacks: {
           title: (items) => "Year: " + items[0].label,
           label: (item) => {
-            if (item.datasetIndex === 0) return " Temp: " + (item.raw as number).toFixed(1) + "\u00b0C";
+            if (item.datasetIndex === 0) {
+              const val = item.raw as number;
+              const sortedTemps = [...temps].sort((a, b) => b - a);
+              const rank = sortedTemps.indexOf(val) + 1;
+              const suffix = rank === 1 ? "st" : rank === 2 ? "nd" : rank === 3 ? "rd" : "th";
+              return ` Temp: ${val.toFixed(1)}\u00b0C (${rank}${suffix} highest)`;
+            }
             return " Precip: " + item.raw + "mm";
           },
         },
@@ -210,43 +255,6 @@ export default function ClimateLineChart({ data }: Props) {
     },
   };
 
-  const chartData = {
-    labels,
-    datasets: [
-      {
-        label: "Avg Temp",
-        data: temps,
-        borderColor: accentColor,
-        backgroundColor: accentGlow,
-        pointBackgroundColor: accentColor,
-        pointBorderColor: paperColor,
-        pointBorderWidth: 1.5,
-        borderWidth: 2,
-        tension: 0.35,
-        yAxisID: "y",
-        pointHitRadius: 12,
-        pointRadius: 4,
-        pointHoverRadius: 7,
-      },
-      {
-        label: "Precip",
-        data: precips,
-        borderColor: blueColor,
-        backgroundColor: blueGlow,
-        borderDash: [4, 2],
-        pointBackgroundColor: blueColor,
-        pointBorderColor: paperColor,
-        pointBorderWidth: 1,
-        borderWidth: 1.5,
-        tension: 0.35,
-        yAxisID: "y1",
-        pointHitRadius: 12,
-        pointRadius: 0,
-        pointHoverRadius: 4,
-      },
-    ],
-  };
-
   return (
     <div style={{ position: "relative", display: "flex", flexDirection: "column" }}>
       {/* Chart wrapper — explicit height, overflow hidden */}
@@ -258,7 +266,7 @@ export default function ClimateLineChart({ data }: Props) {
       }}>
         <Line
           plugins={[trendLinePlugin, selectedYearPlugin]}
-          data={chartData}
+          data={chartData as any}
           options={options as any}
           key={isDark ? "dark" : "light"}
           id="climate-line"

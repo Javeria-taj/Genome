@@ -2,6 +2,7 @@ import Link from "next/link";
 import StarField from "@/components/auth/StarField";
 import EarthWireframe from "@/components/auth/EarthWireframe";
 import FaviconSVG from "@/components/auth/FaviconSVG";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 export const metadata = {
   title: "Genome — 40 Years of Climate Data, Mapped",
@@ -13,7 +14,8 @@ export default function LandingPage() {
   return (
     <div style={{ fontFamily: "Space Mono, monospace", background: "#09090f", color: "#ede8dc" }}>
       {/* ── SECTION 1: HERO ─────────────────────────────────── */}
-      <section
+      <ScrollReveal
+        as="section"
         className="landing-hero"
         style={{
           minHeight: "100vh",
@@ -123,7 +125,7 @@ export default function LandingPage() {
         </div>
 
         {/* RIGHT — Stats + Feature list */}
-        <div
+        <ScrollReveal
           className="landing-right"
           style={{
             background: '#f5f0e8',
@@ -241,11 +243,12 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </ScrollReveal>
+      </ScrollReveal>
 
       {/* ── SECTION 2: HOW IT WORKS ─────────────────────────── */}
-      <section
+      <ScrollReveal
+        as="section"
         style={{
           background: "#ede8dc",
           padding: "76px 48px",
@@ -298,8 +301,9 @@ export default function LandingPage() {
               desc: "Compare cities, calculate decade deltas, track extreme events, and download your data as CSV for further analysis.",
             },
           ].map((step, i) => (
-            <div
+            <ScrollReveal
               key={step.num}
+              delay={i * 150}
               style={{
                 padding: "24px 28px",
                 borderRight: i < 2 ? "1px solid #0f0e0d" : "none",
@@ -338,16 +342,17 @@ export default function LandingPage() {
               >
                 {step.desc}
               </div>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
-      </section>
+      </ScrollReveal>
 
       {/* ── SECTION 3: USE CASES ────────────────────────────── */}
-      <section
+      <ScrollReveal
+        as="section"
         style={{
-          background: "#ede8dc",
-          padding: "76px 48px",
+          background: "#f5f0e8",
+          padding: "clamp(48px, 8vw, 76px) clamp(24px, 5vw, 48px)",
           borderTop: "1.5px solid #0f0e0d",
         }}
       >
@@ -442,7 +447,7 @@ export default function LandingPage() {
             </div>
           ))}
         </div>
-      </section>
+      </ScrollReveal>
 
       {/* ── SECTION 4: FOOTER ───────────────────────────────── */}
       <footer
