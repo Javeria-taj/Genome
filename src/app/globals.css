@@ -58,6 +58,23 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   transition: background-color 0.2s ease, color 0.2s ease;
+  position: relative;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  opacity: 0.035;
+  z-index: 9999;
+  pointer-events: none;
+  background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+  mix-blend-mode: multiply;
+}
+
+html.dark body::after {
+  opacity: 0.12;
+  mix-blend-mode: screen;
 }
 
 /* ─── ANIMATIONS ───────────────────────────────────────── */
@@ -691,7 +708,28 @@ textarea {
 }
 
 .leaflet-tile {
-  filter: sepia(0.15) contrast(0.95);
+  filter: sepia(0.12) contrast(0.92) brightness(1.02);
+  transition: filter 0.3s ease;
+}
+
+html.dark .leaflet-tile {
+  filter: invert(100%) hue-rotate(180deg) brightness(0.9) contrast(1.15) saturate(0.4) !important;
+}
+
+/* Custom Brutalist Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: var(--paper2);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--ink);
+  border: 1px solid var(--paper);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
 }
 
 .leaflet-control-zoom a {

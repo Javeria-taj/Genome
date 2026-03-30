@@ -190,25 +190,24 @@ export default function ClimateLineChart({ data }: Props) {
         intersect: false,
         position: "nearest",
         backgroundColor: isDark ? "#232018" : "#f5f0e8",
-        borderColor: isDark ? "rgba(237,232,220,0.4)" : "rgba(15,14,13,0.4)",
-        borderWidth: 1,
+        borderColor: inkColor,
+        borderWidth: 1.5,
+        cornerRadius: 0, // Brutalist: no rounded corners
         titleColor: inkColor,
-        bodyColor: dimColor,
-        titleFont: { family: "var(--mono)", size: 13, weight: "bold" as any },
-        bodyFont: { family: "var(--mono)", size: 12 },
-        padding: 11,
+        bodyColor: inkColor,
+        titleFont: { family: "var(--mono)", size: 12, weight: "bold" as any },
+        bodyFont: { family: "var(--mono)", size: 11 },
+        padding: 12,
         displayColors: true,
+        boxPadding: 6,
+        caretSize: 0,
         callbacks: {
-          title: (items) => "Year: " + items[0].label,
+          title: (items) => `YEAR_REF: ${items[0].label}`,
           label: (item) => {
-            if (item.datasetIndex === 0) {
-              const val = item.raw as number;
-              const sortedTemps = [...temps].sort((a, b) => b - a);
-              const rank = sortedTemps.indexOf(val) + 1;
-              const suffix = rank === 1 ? "st" : rank === 2 ? "nd" : rank === 3 ? "rd" : "th";
-              return ` Temp: ${val.toFixed(1)}\u00b0C (${rank}${suffix} highest)`;
-            }
-            return " Precip: " + item.raw + "mm";
+            const label = item.dataset.label || "";
+            const val = item.raw as number;
+            const unit = item.datasetIndex === 0 ? "°C" : "mm";
+            return ` [${label.toUpperCase().replace(" ", "_")}] ${val.toFixed(1)}${unit}`;
           },
         },
       },

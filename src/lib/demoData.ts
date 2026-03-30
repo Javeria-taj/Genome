@@ -9,6 +9,8 @@ export const DEMO_LOCATION: LocationInfo = {
   countryCode: "IN",
   displayName: "Mumbai, IN",
   timezone: "Asia/Kolkata",
+  state: "Maharashtra",
+  currentTemp: 31,
   aqi: 58,
   aqiLabel: "Moderate",
   aqiColor: "#e67e22",

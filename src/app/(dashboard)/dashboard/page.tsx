@@ -188,7 +188,39 @@ export default function DashboardPage() {
                     <div style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: ".12em", color: "var(--accent)", marginBottom: "6px", fontWeight: "bold" }}>
                       [ GENOME_INSIGHT_V1.0 ]
                     </div>
-                    {synopsis}
+                    <div style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
+                      <div style={{ flex: 1 }}>{synopsis}</div>
+                      
+                      {/* Climatic Shift Gauge */}
+                      <div style={{ width: "80px", textAlign: "center", flexShrink: 0, marginTop: "4px" }}>
+                        <div style={{ fontSize: "9px", color: "var(--dim)", textTransform: "uppercase", marginBottom: "4px", letterSpacing: "0.05em" }}>
+                          40yr Shift
+                        </div>
+                        <div style={{ height: "45px", background: "rgba(15,14,13,0.06)", border: "1px solid var(--ink)", position: "relative", overflow: "hidden" }}>
+                          {/* Gauge Scale marks */}
+                          {[0, 25, 50, 75, 100].map(m => (
+                            <div key={m} style={{ position: "absolute", bottom: `${m}%`, left: 0, width: "4px", height: "1px", background: "var(--ink)", opacity: 0.4 }} />
+                          ))}
+                          
+                          {/* Active Gauge Fill */}
+                          <div style={{ 
+                            position: "absolute", 
+                            bottom: 0, 
+                            left: 0, 
+                            width: "100%", 
+                            height: `${Math.min(100, Math.max(10, (parseFloat((synopsis.match(/-?\d+\.\d+/) || ["0"])[0]) / 2.0) * 100))}%`, 
+                            background: "var(--accent)",
+                            transition: "height 1s ease-out",
+                            opacity: 0.85
+                          }}>
+                            <div className="breathe" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "2px", background: "white", boxShadow: "0 0 10px white" }} />
+                          </div>
+                        </div>
+                        <div style={{ fontSize: "12px", fontWeight: "bold", marginTop: "4px", color: "var(--accent)" }}>
+                          {(synopsis.match(/-?\d+\.\d+/) || ["0"])[0]}°C
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
 
