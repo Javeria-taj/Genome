@@ -44,12 +44,32 @@ const NAV = [
     ),
   },
   {
+    label: "Extremes",
+    path: "/extremes",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 32 32" fill="none">
+        <path d="M16 7 L16 19 M16 24 L16 25" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+        <circle cx="16" cy="16" r="13" stroke="currentColor" strokeWidth="1.5" opacity="0.4"/>
+      </svg>
+    ),
+  },
+  {
     label: "Export",
     path: "/export",
     icon: (
       <svg width="16" height="16" viewBox="0 0 32 32" fill="none">
         <path d="M16 6 L16 22 M10 16 L16 22 L22 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         <line x1="6" y1="26" x2="26" y2="26" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
+  {
+    label: "About",
+    path: "/about",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="13" stroke="currentColor" strokeWidth="1.5"/>
+        <path d="M16 11 L16 11.5 M16 15 L16 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
       </svg>
     ),
   },

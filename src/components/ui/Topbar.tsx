@@ -134,7 +134,7 @@ export default function Topbar() {
           GitHub
         </a>
         {/* About link */}
-        <Link href="/about" className="tb-btn" style={{ textDecoration: "none" }}
+        <Link href="/about" className="tb-btn tb-btn-keep" style={{ textDecoration: "none" }}
           title="About Genome"
         >
           About
