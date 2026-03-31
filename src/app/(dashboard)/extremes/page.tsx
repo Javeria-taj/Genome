@@ -35,14 +35,16 @@ export default function ExtremesPage() {
           <div className="ph-title">Weather Extremes Tracker</div>
           <div className="ph-sub" style={{ marginTop: 2 }}>Anomaly decade analysis · heat & rain events</div>
         </div>
-        <span className="ptag">Per Decade</span>
+        <div style={{ display: "flex", gap: 5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginLeft: "12px", textAlign: "right" }}>
+          <span className="ptag">Per Decade</span>
+        </div>
       </div>
 
       <div className="panel-grid">
         <div className="panel panel-full">
           <div className="phead">
             <span className="ptitle">Extreme Events Per Decade</span>
-            <span className="ptag">{locationLabel || "No selection"}</span>
+            <span className="ptag" style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{locationLabel || "No selection"}</span>
           </div>
           <div className="pbody">
             {!selectedCoords ? (

@@ -97,21 +97,23 @@ export default function Topbar() {
         }
         .flash-coord span { animation: flashGreen 0.6s ease-out; }
       `}</style>
-      <div className={`tb-coords ${flash ? "flash-coord" : ""}`}>
+      <div className={`tb-coords ${flash ? "flash-coord" : ""}`} style={{ flex: 1, justifyContent: "center" }}>
         {selectedLocation ? (
-          <>
-            <span style={{ fontWeight: 700, color: "var(--ink)", fontSize: "11px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            <span style={{ fontWeight: 700, color: "var(--ink)", fontSize: "11px", overflow: "hidden", textOverflow: "ellipsis" }}>
               {selectedLocation.displayName}
             </span>
-            <span style={{ color: "var(--dim)", margin: "0 4px" }}>·</span>
-            <span>LAT <b>{Math.abs(selectedLocation.lat).toFixed(4)}° {selectedLocation.lat >= 0 ? "N" : "S"}</b></span>
-            <span>LNG <b>{Math.abs(selectedLocation.lng).toFixed(4)}° {selectedLocation.lng >= 0 ? "E" : "W"}</b></span>
-          </>
+            <span style={{ color: "var(--dim)" }}>·</span>
+            <div style={{ display: "flex", gap: "10px", flexShrink: 0 }}>
+              <span>LAT <b>{Math.abs(selectedLocation.lat).toFixed(4)}° {selectedLocation.lat >= 0 ? "N" : "S"}</b></span>
+              <span>LNG <b>{Math.abs(selectedLocation.lng).toFixed(4)}° {selectedLocation.lng >= 0 ? "E" : "W"}</b></span>
+            </div>
+          </div>
         ) : selectedCoords ? (
-          <>
+          <div style={{ display: "flex", gap: "12px" }}>
             <span>LAT <b>{Math.abs(selectedCoords.lat).toFixed(4)}° {selectedCoords.lat >= 0 ? "N" : "S"}</b></span>
             <span>LNG <b>{Math.abs(selectedCoords.lng).toFixed(4)}° {selectedCoords.lng >= 0 ? "E" : "W"}</b></span>
-          </>
+          </div>
         ) : (
           <span style={{ color: "var(--dim)", fontStyle: "italic", fontSize: "10px" }}>
             Click map to select location
@@ -138,7 +140,7 @@ export default function Topbar() {
           About
         </Link>
         {/* Dark mode toggle */}
-        <button className="tb-btn" onClick={toggle} title="Toggle dark mode">
+        <button className="tb-btn tb-btn-keep" onClick={toggle} title="Toggle dark mode">
           {isDark ? "● Dark" : "○ Light"}
         </button>
 

@@ -36,7 +36,7 @@ export default function ExportPage() {
           <div className="ph-title">Data Export</div>
           <div className="ph-sub" style={{ marginTop: 2 }}>CSV download · paginated preview</div>
         </div>
-        <div style={{ display: "flex", gap: 5 }}>
+        <div style={{ display: "flex", gap: 5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginLeft: "12px", textAlign: "right" }}>
           <span className="ptag">CSV</span>
         </div>
       </div>
@@ -53,7 +53,7 @@ export default function ExportPage() {
               <div className="exp-grid" style={{ gap: 14, alignItems: "start" }}>
                 {/* Preview table */}
                 <div>
-                  <div style={{ fontSize: 11, color: "var(--dim)", marginBottom: 8, fontFamily: "var(--mono)" }}>
+                  <div style={{ fontSize: 11, color: "var(--dim)", marginBottom: 8, fontFamily: "var(--mono)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     Preview — {locationDisplayName} (1985–2024) · {data.length} records
                   </div>
                   <div className="exp-table">

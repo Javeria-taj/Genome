@@ -271,6 +271,9 @@ textarea {
   gap: 16px;
   color: var(--dim);
   font-size: 9.5px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .tb-coords b {
@@ -474,6 +477,8 @@ textarea {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+  gap: 16px;
+  overflow: hidden;
 }
 
 .ph-title {
@@ -481,6 +486,9 @@ textarea {
   font-style: italic;
   font-size: clamp(20px, 3vw, 28px);
   letter-spacing: -.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .ph-sub {
@@ -552,6 +560,8 @@ textarea {
   padding: 7px 9px;
   text-align: center;
   border-right: var(--b1);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .sc:last-child {
@@ -562,6 +572,9 @@ textarea {
   font-size: 19px;
   font-weight: 700;
   display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .sl {
@@ -2095,7 +2108,7 @@ button:hover .btn-arrow {
     left: 0;
     bottom: 56px;
     width: 260px !important;
-    z-index: 1000;
+    z-index: 3000;
     border-right: var(--b2);
     display: flex !important;
   }
@@ -2104,7 +2117,7 @@ button:hover .btn-arrow {
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.4);
-    z-index: 999;
+    z-index: 2999;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s;

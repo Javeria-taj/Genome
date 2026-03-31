@@ -65,7 +65,7 @@ export default function DashboardPage() {
           <div className="ph-title">Genome Dashboard</div>
           <div className="ph-sub" style={{ marginTop: 2 }}>Overview — 40yr Climate Analysis</div>
         </div>
-        <div style={{ fontSize: 10, color: "var(--dim)", letterSpacing: "0.06em", fontFamily: "var(--mono)" }}>
+        <div style={{ fontSize: 10, color: "var(--dim)", letterSpacing: "0.06em", fontFamily: "var(--mono)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginLeft: "12px", textAlign: "right" }}>
           {selectedLocation
             ? selectedLocation.city + ", " + selectedLocation.country + "  ·  " +
             Math.abs(selectedLocation.lat).toFixed(4) + "°" + (selectedLocation.lat >= 0 ? "N" : "S") + ", " +
@@ -80,12 +80,12 @@ export default function DashboardPage() {
         {/* MAP — full width */}
         <div className="panel panel-full map-wrap" style={{ position: "relative", overflow: "hidden" }}>
           <div className="scanline" />
-          <div style={{ position: "absolute", top: 8, right: 12, fontSize: 8, color: "var(--dim)", zIndex: 5, letterSpacing: ".1em", opacity: 0.5 }}>
+          <div className="desktop-only" style={{ position: "absolute", top: 48, right: 12, fontSize: 8, color: "var(--dim)", zIndex: 5, letterSpacing: ".1em", opacity: 0.5 }}>
             [0.1] SCANNING_MAP_SURFACE
           </div>
           <div className="phead">
             <span className="ptitle">Interactive World Map</span>
-            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
               <span className="ptag">Leaflet.js</span>
               <span className="ptag" style={{ borderColor: "var(--red)", color: "var(--red)" }}>Click to pin</span>
             </div>
@@ -96,7 +96,7 @@ export default function DashboardPage() {
         {/* CLIMATE TRENDS */}
         <div className="panel" style={{ position: "relative", overflow: "hidden" }}>
           <div className="scanline" style={{ animationDuration: '12s', height: '60px' }} />
-          <div style={{ position: "absolute", top: 8, right: 12, fontSize: 8, color: "var(--dim)", zIndex: 5, opacity: 0.5 }}>
+          <div className="desktop-only" style={{ position: "absolute", top: 48, right: 12, fontSize: 8, color: "var(--dim)", zIndex: 5, opacity: 0.5 }}>
             TELEMETRY_REF_TR-09
           </div>
           <div className="phead">

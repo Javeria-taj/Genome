@@ -112,7 +112,7 @@ export default function ComparePage() {
               }}>
                 <div>
                   <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--dim)", fontFamily: "var(--mono)" }}>City A</div>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: "var(--ink)", fontFamily: "var(--mono)" }}>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: "var(--ink)", fontFamily: "var(--mono)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {cityAName !== "City A" ? cityAName : "Select a city"}
                   </div>
                   {countryA && <div style={{ fontSize: 11, color: "var(--dim)", fontFamily: "var(--mono)", marginTop: 2 }}>{countryA}</div>}
@@ -131,7 +131,7 @@ export default function ComparePage() {
               }}>
                 <div>
                   <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--dim)", fontFamily: "var(--mono)" }}>City B</div>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: "var(--ink)", fontFamily: "var(--mono)" }}>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: "var(--ink)", fontFamily: "var(--mono)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {cityBName !== "City B" ? cityBName : "Select a city"}
                   </div>
                   {countryB && <div style={{ fontSize: 11, color: "var(--dim)", fontFamily: "var(--mono)", marginTop: 2 }}>{countryB}</div>}

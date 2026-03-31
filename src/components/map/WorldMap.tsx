@@ -472,7 +472,7 @@ export default function WorldMap({ onPinsChange }: { onPinsChange?: (count: numb
               style={{
                 position: "absolute", top: "100%", left: 0, right: 0,
                 background: "var(--paper)", border: "1px solid var(--ink)",
-                borderTop: "none", zIndex: 2000, maxHeight: "240px", overflowY: "auto",
+                borderTop: "none", zIndex: 1100, maxHeight: "240px", overflowY: "auto",
               }}
             >
               {noResults && query.length >= 2 ? (

@@ -125,7 +125,9 @@ export default function LocationInfoCard() {
       <div className="lic-section">
         <div className="lic-label">Local Time</div>
         <div className="lic-time">{localTime || "—:—"}</div>
-        <div className="lic-timezone">{tz}</div>
+        <div className="lic-timezone" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          {tz}
+        </div>
       </div>
 
       {/* Coordinates */}

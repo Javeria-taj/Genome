@@ -29,7 +29,7 @@ export default function TrendsPage() {
           <div className="ph-title">40-Year Climate Trends</div>
           <div className="ph-sub" style={{ marginTop: 2 }}>Temperature & Precipitation · 1985–2024</div>
         </div>
-        <div style={{ fontSize: 11, color: "var(--dim)", fontFamily: "var(--mono)" }}>
+        <div style={{ fontSize: 11, color: "var(--dim)", fontFamily: "var(--mono)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginLeft: "12px", textAlign: "right" }}>
           {selectedCoords ? `${locationLabel || "Selected Location"} · Open-Meteo` : "Select a location on the map below"}
         </div>
       </div>

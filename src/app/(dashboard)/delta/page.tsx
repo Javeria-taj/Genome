@@ -63,14 +63,16 @@ export default function DeltaPage() {
           <div className="ph-title">Decade Delta Calculator</div>
           <div className="ph-sub" style={{ marginTop: 2 }}>Inter-decade temperature shift analysis</div>
         </div>
-        <span className="ptag" style={{ borderColor: "var(--red)", color: "var(--red)" }}>Heat Gauge</span>
+        <div style={{ display: "flex", gap: 5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginLeft: "12px", textAlign: "right" }}>
+          <span className="ptag" style={{ borderColor: "var(--red)", color: "var(--red)" }}>Heat Gauge</span>
+        </div>
       </div>
 
       <div className="panel-grid">
         <div className="panel panel-full">
           <div className="phead">
             <span className="ptitle">Delta Configuration</span>
-            <span className="ptag">{locationLabel || "No location selected"}</span>
+            <span className="ptag" style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{locationLabel || "No location selected"}</span>
           </div>
           <div className="pbody">
             {!selectedCoords ? (
