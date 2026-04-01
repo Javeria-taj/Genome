@@ -23,11 +23,13 @@ export const metadata: Metadata = {
   icons: { icon: '/favicon.svg' },
 };
 
+interface RootLayoutProps {
+  children: React.ReactNode;
+}
+
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: RootLayoutProps) {
   return (
     <html lang="en">
       <body className={`${spaceMono.variable} ${instrumentSerif.variable}`}>

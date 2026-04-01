@@ -6,11 +6,13 @@ import MobileBottomNav from "@/components/ui/MobileBottomNav";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
+interface DashboardLayoutProps {
+  children: React.ReactNode;
+}
+
 export default async function DashboardLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: DashboardLayoutProps) {
   const session = await auth();
   if (!session) redirect("/login");
 

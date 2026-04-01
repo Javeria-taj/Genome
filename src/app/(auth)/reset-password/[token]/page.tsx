@@ -1,13 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, use } from "react";
 import { useRouter } from "next/navigation";
 import AuthLeftPanel from "@/components/auth/AuthLeftPanel";
 import AuthButton from "@/components/auth/AuthButton";
 import ErrorBanner from "@/components/auth/ErrorBanner";
 import Field from "@/components/auth/Field";
 
-export default function ResetPasswordPage({ params }: { params: { token: string } }) {
+interface ResetPasswordPageProps {
+  params: Promise<{ token: string }>;
+}
+
+export default function ResetPasswordPage({ params }: ResetPasswordPageProps) {
+  const { token } = use(params);
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -32,7 +37,7 @@ export default function ResetPasswordPage({ params }: { params: { token: string 
       const res = await fetch("/api/auth/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: params.token, password }),
+        body: JSON.stringify({ token: token, password }),
       });
       const data = await res.json();
 
